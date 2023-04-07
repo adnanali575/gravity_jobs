@@ -1,34 +1,36 @@
 <template>
   <div>
-    <v-card flat class="card pa-6">
+    <v-card flat class="card pa-6 mt-4 mt-md-0">
       <p class="font-weight-black mb-4">Experiences</p>
 
-      <v-list v-for="i in 3" :key="i">
+      <v-list>
         <v-list-item>
           <div class="d-flex pa-0 pa-md-4">
             <v-avatar>
-              <img src="@/assets/icons/experience_icon.svg"/>
+              <img src="@/assets/icons/experience_icon.svg" />
             </v-avatar>
             <v-sheet width="100%" class="ms-4">
-              <p class="font-weight-black">CTO</p>
-              <p>Protecter & Gamble . Full time</p>
+              <p class="font-weight-black">{{ employee.seniority[0] }}</p>
+              <p>{{ employee.expertInSkill }}</p>
 
-              <div class="d-flex align-center flex-wrap">
+              <div class="skill-info">
                 <span class="d-flex">
-                  <span
+                  <span class="d-flex"
                     ><img
-                      class="ms-3"
+                      class="mr-2"
                       src="@/assets/icons/small_calender_icon.svg"
-                  /></span>
-                  <p class="small-text">Jan. 2017 - Today . 4 years</p>
+                    />
+                    <p class="small-text">
+                      {{ employee.skillStartingYear }} - Today . 4 years
+                    </p>
+                  </span>
                 </span>
-                <span class="d-flex">
-                  <span
-                    ><img
-                      class="ms-3"
-                      src="@/assets/icons/small_location_icon.svg"
-                  /></span>
-                  <p class="small-text">United-Kingdom</p>
+                <span class="location d-flex">
+                  <img
+                    class="mr-2"
+                    src="@/assets/icons/small_location_icon.svg"
+                  />
+                  <p class="small-text">{{ employee.experienceInSkillFrom }}</p>
                 </span>
               </div>
             </v-sheet>
@@ -39,7 +41,7 @@
 
       <p class="font-weight-black my-4">Education</p>
 
-      <v-list v-for="i in 3" :key="i">
+      <v-list>
         <v-list-item>
           <div class="d-flex pa-4">
             <v-avatar>
@@ -48,23 +50,25 @@
 
             <v-sheet width="100%" class="ms-4">
               <p class="font-weight-black">
-                Massachusetts Institute of Technology
+                {{ employee.institution }}
               </p>
               <p>Protecter & Gamble . Full time</p>
 
-              <div class="d-flex align-center">
-                <span
+              <div class="skill-info">
+                <span class="d-flex"
                   ><img
-                    class="ms-3"
+                    class="mr-2"
                     src="@/assets/icons/small_calender_icon.svg"
-                /></span>
-                <p>Jan. 2017 - Today . 4 years</p>
-                <span
+                  />
+                  <p>{{ employee.passingYear }} - Today . 4 years</p>
+                </span>
+                <span class="location d-flex"
                   ><img
-                    class="ms-3"
+                    class="mr-2"
                     src="@/assets/icons/small_location_icon.svg"
-                /></span>
-                <p>United-Kingdom</p>
+                  />
+                  <p>{{ employee.educatedFrom }}</p>
+                </span>
               </div>
             </v-sheet>
           </div>
@@ -75,7 +79,16 @@
   </div>
 </template>
 
-<style scoped>
+<script setup lang="ts">
+import type { employeesInfoTypes } from "@/types";
+
+const props = defineProps<{
+  employee: employeesInfoTypes;
+}>();
+</script>
+
+<style scoped lang="scss">
+@import '@/scss/variables';
 .small-text {
   font-weight: 400;
   font-size: 14px;
@@ -83,6 +96,24 @@
 }
 
 .card {
-  box-shadow: 0px 4px 6px rgba(217, 219, 233, 0.3);
+  box-shadow: $shadow;
+}
+
+.skill-info {
+  display: flex;
+}
+
+.location {
+  margin-left: 20px;
+  align-items: center;
+}
+
+@media (max-width: 530px) {
+  .location {
+    margin-left: 0px;
+  }
+  .skill-info {
+    flex-wrap: wrap;
+  }
 }
 </style>

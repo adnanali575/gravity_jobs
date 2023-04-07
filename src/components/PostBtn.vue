@@ -1,0 +1,10 @@
+<template>
+  <v-btn
+    class="post-btn"
+    flat
+    color="primary"
+    icon="mdi-plus"
+    roter
+    to="/post"
+  ></v-btn>
+</template>

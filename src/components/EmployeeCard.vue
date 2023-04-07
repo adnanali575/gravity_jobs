@@ -3,21 +3,21 @@
     <v-sheet class="bg-background mx-2 ma-md-3">
       <v-card height="fit-content" variant="flat" class="pa-4 employee-card">
         <v-sheet class="d-flex">
-          <router-link to="/profile">
+          <div @click="showProfile">
             <v-avatar class="profile-avatar">
               <img
                 src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
               />
             </v-avatar>
-          </router-link>
+          </div>
 
           <v-sheet
             class="d-flex flex-column align-start justify-space-evenly px-4"
           >
-            <b>Marc Dupond</b>
-            <v-chip class="bg-cto font-weight-bold text-purple px-4"
-              >CTO</v-chip
-            >
+            <b>{{ employee.firstName }} {{ employee.lastName }}</b>
+            <v-chip :class="`bg-${employee.seniority[0]} text-${employee.seniority[0]}-text font-weight-bold px-4`">{{
+              employee.seniority[0]
+            }}</v-chip>
           </v-sheet>
         </v-sheet>
 
@@ -26,7 +26,7 @@
             <v-col cols="6">
               <v-sheet class="">
                 <p class="font-weight-medium">Localisation</p>
-                <p>Full-remote</p>
+                <p>{{ employee.location }}</p>
               </v-sheet>
             </v-col>
             <v-divider vertical></v-divider>
@@ -45,30 +45,88 @@
         <v-sheet class="mt-5">
           <p class="font-weight-medium">Stacks used</p>
           <v-sheet>
-            <v-chip class="ma-2" color="primary" label text-color="white"
-              >Vue js</v-chip
-            >
-            <v-chip class="ma-2" color="primary" label text-color="white"
-              >Vuetify</v-chip
-            >
-            <v-chip class="ma-2" color="primary" label text-color="white"
-              >Vuex</v-chip
+            <v-chip
+              v-for="(stack, index) in employee.stacks"
+              :key="index"
+              class="ma-2"
+              color="primary"
+              label
+              text-color="white"
+              >{{ stack }}</v-chip
             >
           </v-sheet>
         </v-sheet>
 
-        <slot class="mt-2"></slot>
+        <div class="mt-5">
+          <BaseButton
+            v-if="nullStatus"
+            @click="updateStatus"
+            title="Add Shortlit"
+            vari="outlined"
+          />
+          <BaseButton
+            v-if="contacted"
+            @click="updateStatus"
+            title="Contact"
+            vari="flat"
+          />
+          <BaseButton
+            v-if="interview"
+            @click="updateStatus"
+            title="Interview"
+            vari="flat"
+          />
+          <BaseButton
+            v-if="hire"
+            @click="updateStatus"
+            title="Hire"
+            vari="flat"
+          />
+        </div>
       </v-card>
     </v-sheet>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import store from "@/store/store";
+import BaseButton from "./BaseButton.vue";
+import type { employeesInfoTypes } from "@/types";
+import { computed } from "@vue/reactivity";
 
-<style scoped>
+const props = defineProps<{
+  employee: employeesInfoTypes;
+}>();
+
+const showProfile = () => {
+  store.dispatch("showProfile", props.employee);
+};
+
+const nullStatus = computed(() => {
+  return props.employee.status === "";
+});
+
+const contacted = computed(() => {
+  return props.employee.status === "shortlisted";
+});
+
+const interview = computed(() => {
+  return props.employee.status === "contacted";
+});
+
+const hire = computed(() => {
+  return props.employee.status === "interview";
+});
+
+const updateStatus = () => {};
+</script>
+
+<style scoped lang="scss">
+@import '@/scss/variables';
 .employee-card {
-  filter: drop-shadow(0px 6px 18px #d9dbe9);
+  filter: drop-shadow($shadow);
   width: 100%;
+  border-radius: 8px;
 }
 
 .profile-avatar {
@@ -76,7 +134,7 @@
   height: 88px !important;
 }
 
-.profile-avatar img{
+.profile-avatar img {
   height: 100%;
 }
 </style>

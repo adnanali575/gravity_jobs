@@ -5,8 +5,13 @@
     >
       <h1>Profile</h1>
       <span class="d-flex align-center">
-          <base-button class="add-btn me-8 me-md-6" text="Add Shortlist" />
+        <base-button
+          class="add-btn me-8 me-md-6"
+          vari="outlined"
+          title="Add Shortlist"
+        />
         <v-btn
+          v-if="false"
           width="152px"
           height="48px"
           flat
@@ -20,11 +25,11 @@
     <div class="profile-content px-4 px-sm-8 px-md-12">
       <v-row>
         <v-col cols="12" md="5" class="">
-          <employee-card class="ma-n2 ma-md-n3"></employee-card>
+          <employee-card :employee="employeeInfo" class="ma-n2 ma-md-n3"></employee-card>
         </v-col>
 
         <v-col class="mt-n3 mt-md-0" cols="12" md="7">
-          <EmployeeInfo />
+          <EmployeeInfo :employee="employeeInfo" />
         </v-col>
       </v-row>
     </div>
@@ -35,18 +40,34 @@
 import BaseButton from "@/components/BaseButton.vue";
 import employeeCard from "@/components/EmployeeCard.vue";
 import EmployeeInfo from "@/components/EmployeeInfo.vue";
+import store from "@/store/store";
+import { computed } from "@vue/reactivity";
+import type { employeesInfoTypes } from "@/types";
+
+const employeeInfo = computed(()=>{
+  return store.state.employeeInfo
+})
+
+// console.log(store.state.employeeInfo.value)
+console.log(employeeInfo.value)
+
 </script>
 
-<style>
-
-.add-btn{
-    width: 185px
-}
+<style scoped lang="scss">
 .profile {
-  margin-top: 40px;
+  margin-top: 105px;
+}
+.add-btn {
+  width: 185px;
 }
 
 .profile-content {
   max-width: 1800px;
+}
+
+@media (max-width: 1279px) {
+  .profile {
+    padding-bottom: 80px;
+  }
 }
 </style>

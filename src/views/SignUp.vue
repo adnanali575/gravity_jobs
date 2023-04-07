@@ -1,15 +1,25 @@
 <template>
-  <div>
+  <div class="sign-up">
     <SignInForm>
       <template #form>
         <div class="form-content">
-          <SignUpForm></SignUpForm>
+          <SignUpForm>
+            <template #userDetails="userDetails">
+              <BaseButton
+                @click="signUp(userDetails)"
+                title="Sign up"
+                vari="flat"
+              />
+            </template>
+          </SignUpForm>
         </div>
       </template>
 
       <template #optionalNavigation>
-        <v-sheet class="d-flex align-center justify-center align-self-end">
-          <p>Don’t have any account?</p>
+        <v-sheet
+          class="d-flex flex-wrap align-center justify-center align-self-end"
+        >
+          <p class="text-center">Don’t have any account?</p>
           <v-btn
             class="text-capitalize"
             variant="text"
@@ -27,6 +37,14 @@
 <script setup lang="ts">
 import SignUpForm from "@/components/SignUpForm.vue";
 import SignInForm from "@/components/SignInForm.vue";
+import BaseButton from "@/components/BaseButton.vue";
+import type { signUpObject } from "@/types";
+
+import store from "@/store/store";
+
+let signUp = (userDetails: signUpObject) => {
+  store.dispatch("signUp", userDetails);
+};
 </script>
 
 <style scoped lang="scss">

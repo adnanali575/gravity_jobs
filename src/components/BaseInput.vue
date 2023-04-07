@@ -6,22 +6,31 @@
         :label="label"
         :placeholder="placeholder"
         class="my-2"
+        :model-value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
       ></v-text-field>
     </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 const props = defineProps<{
-  placeholder: string;
-  type: string;
-  label: string;
+  placeholder?: string;
+  type?: string;
+  label?: string;
+  modelValue: string;
 }>();
+
+const emit = defineEmits(["update:modelValue"]);
 </script>
 
-<style>
+<style lang="scss">
+@import "@/scss/variables";
+
 .base-input .v-text-field label {
-  color: #a0a3bd;
+  color: $label-placeholder;
 }
 
 .base-input .v-field__overlay {
@@ -40,6 +49,6 @@ const props = defineProps<{
   border-radius: 40px;
   height: 48px;
   opacity: 1;
-  background: #eff0f6;
+  background: $input-background;
 }
 </style>

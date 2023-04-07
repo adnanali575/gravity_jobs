@@ -1,38 +1,78 @@
 <template>
   <div class="chat">
-
-    <v-sheet>
-      <v-row no-gutters>
-        <v-col cols="12" class="bg-white" md="4">
-
-          <div id="chat-list" class="" style="width: 100%; height: 100%">
-            <ChatList></ChatList>
-          </div>
-        </v-col>
-
-        <v-divider vertical></v-divider>
-
-        <v-col class="bg-white chat-window" cols="12" md="8">
-          <ChatWindow/>
-        </v-col>
-      </v-row>
-    </v-sheet>
-
+    <ChatList class="list" :class="{ 'translate-list': list }">
+      <template #close-list>
+        <div>
+          <v-btn
+          icon="mdi-format-list-checks"
+          class="toggle-btn mx-3"
+          flat
+          @click="toggleList"
+        ></v-btn>
+        </div>
+      </template>
+    </ChatList>
+    <v-divider vertical></v-divider>
+    <ChatWindow>
+      <template #show-list>
+        <v-btn
+          icon="mdi-format-list-checks"
+          class="toggle-btn mx-3"
+          flat
+          @click="toggleList"
+        ></v-btn>
+      </template>
+    </ChatWindow>
   </div>
 </template>
 
 <script setup lang="ts">
 import ChatList from "@/components/ChatList.vue";
 import ChatWindow from "@/components/ChatWindow.vue";
+import { ref } from "vue";
 
+let list = ref(false);
+
+let toggleList = () => {
+  list.value = !list.value;
+};
 </script>
 
-<style>
+<style scoped lang="scss">
 .chat {
-    margin-top: -64px;
+  height: 100vh;
+  width: 100%;
+  padding-top: 105px;
+  display: flex;
 }
 
-.list-icon {
+.toggle-btn {
   display: none;
+}
+
+@media (max-width: 1279px) {
+  .chat {
+    padding-bottom: 56px;
+  }
+}
+
+@media (max-width: 900px) {
+  .list {
+    position: fixed;
+    transform: translateX(-100%);
+    height: 100%;
+    width: 100%;
+    padding-bottom: 160px;
+    z-index: 100;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .toggle-btn {
+    display: block;
+  }
+
+  .translate-list {
+    transform: translateX(0%);
+  }
 }
 </style>

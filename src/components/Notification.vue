@@ -17,11 +17,8 @@
   </v-menu>
 </template>
 
-
 <style>
-
-.bell-icon{
+.bell-icon {
   width: 24px;
 }
-
 </style>
