@@ -19,10 +19,15 @@ const myCustomLightTheme = {
     'background-menu': '#140D33',
     purple: '#B32AEC',
 
-    junior: '#D0EBFC',
-    cto: '#E8CEF1',
-    senior: '#DEFAEA',
-    chip: '#E9E9FF',
+    'Junior-text': '#109CF1',
+    'Senior-text': '#2ED47A',
+    'CTO-text': '#B32AEC',
+    'Lead-text': '#001dff24',
+
+    Junior: '#D0EBFC',
+    Senior: '#DEFAEA',
+    CTO: '#E8CEF1',
+    // Lead: '#bdc1e8 ',
   }
 }
 

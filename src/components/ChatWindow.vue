@@ -1,20 +1,23 @@
 <template>
-  <div class="chat-window">
-
-    <v-sheet height="80px" class="d-flex align-center">
+  <div class="right">
+    <div class="profile-bar">
+      <v-sheet height="100%" class="d-flex align-center">
         <v-btn icon="" flat router class="mx-4" to="/profile">
           <v-avatar class="profile-avatar mx-4">
-              <img
+            <img
               src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-              />
-            </v-avatar>
-          </v-btn>
-            <p class="name-heading">Jean Besson-Perrier</p>
+            />
+          </v-avatar>
+        </v-btn>
+        <p class="name-heading">Jean Besson-Perrier</p>
+        <v-spacer></v-spacer>
+        <slot name="show-list"></slot>
       </v-sheet>
-    <v-divider></v-divider>
+      <v-divider></v-divider>
+    </div>
 
-    <v-sheet class="content-window pa-4 pa-sm-8">
-      <v-sheet class="admin my-4 d-flex">
+    <div class="chat-section">
+      <v-sheet class="chat-info my-4 d-flex" v-for="i in 1" :key="i">
         <v-avatar class="profile-avatar me-4">
           <img
             src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
@@ -27,107 +30,143 @@
           </span>
           <p class="decscription">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            eiusmod tempor incididunt.Consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt.
           </p>
         </div>
       </v-sheet>
 
-      <v-sheet class="admin my-4 d-flex">
-        <v-avatar class="card-profile-avatar me-4">
+      <v-sheet class="my-2">
+        <v-divider></v-divider>
+        <div class="date-text d-flex justify-center">
+          <p class="px-5 bg-white text-center">11 Jan</p>
+        </div>
+      </v-sheet>
+
+      <v-sheet class="chat-info my-4 d-flex" v-for="i in 12" :key="i">
+        <v-avatar class="profile-avatar me-4">
           <img
             src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
           />
         </v-avatar>
         <div>
           <span class="d-flex my-1">
-            <p class="name">Jean Besson-Perrier</p>
-            <p class="ms-5">12:59</p>
+            <p class="name">Jean Durand</p>
+            <p class="ms-5">12:45</p>
           </span>
           <p class="decscription">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. :)
+            eiusmod tempor incididunt.
           </p>
         </div>
       </v-sheet>
 
-      <v-sheet class="my-12">
+      <v-sheet class="my-2">
         <v-divider></v-divider>
         <div class="date-text d-flex justify-center">
-          <p class="px-5 bg-white text-center">12 Jan.</p>
+          <p class="px-5 bg-white text-center">12 Jan</p>
         </div>
       </v-sheet>
+    </div>
 
+    <div class="chat-bar px-8">
       <div class="chat-box d-flex justify-space-between align-center">
-        <v-btn flat icon="">
-          <img src="@/assets/icons/pencil_signature.svg" />
-        </v-btn>
+        <WriteMessagePopUp />
         <v-sheet width="100%">
-          <BaseInput type="text" label="" placeholder="Write your message...." />
+          <BaseInput
+            v-model="messageText"
+            placeholder="Write your message...."
+            @keypress.enter="sendMessage"
+          />
         </v-sheet>
-        <v-btn flat icon="mdi-send" class="send-btn" color="primary"></v-btn>
+        <v-btn flat icon="mdi-send" @click="sendMessage" class="send-btn" color="primary"></v-btn>
       </div>
-    </v-sheet>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import BaseInput from "@/components/BaseInput.vue";
+import WriteMessagePopUp from "./WriteMessagePopUp.vue";
+import { ref } from "vue";
+
+let messageText = ref("");
+
+const sendMessage = ()=>{
+}
 </script>
 
-<style scoped>
-.chat-window {
-  padding-top: 100px;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.name-heading {
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 30px;
-}
-
-.name {
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 28px;
-}
-
-.decscription {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-}
-
-.card-profile-avatar {
-  width: 40px;
-  height: 40px;
-}
-
-.profile-avatar img {
-  height: 100%;
-}
-
-.date-text{
-  transform: translateY(-50%);
-}
-
-.date-text p{
-  width: fit-content;
-}
-
-.chat-box {
+<style scoped lang="scss">
+@import '@/scss/variables';
+.right {
+  overflow: hidden;
   width: 100%;
-}
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 80px 1fr 80px;
 
-.send-btn {
-  margin-left: -53px;
-  margin-top: -3px;
+  .profile-bar {
+    width: 100%;
+    height: 80px;
+  }
+
+  .name-heading {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 30px;
+  }
+
+  .chat-section {
+    background-color: $white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .name {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .decscription {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    background-color: $background;
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  .profile-avatar img {
+    height: 100%;
+  }
+
+  .date-text {
+    margin-top: -13px;
+    p {
+      width: fit-content;
+      z-index: 1000;
+    }
+  }
+
+  .chat-box {
+    width: 100%;
+  }
+
+  .chat-bar {
+    background-color: $white;
+    box-shadow: $shadow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .send-btn {
+      margin-left: -53px;
+      margin-top: -3px;
+    }
+  }
 }
 </style>

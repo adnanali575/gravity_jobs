@@ -1,23 +1,30 @@
 <template>
   <div>
-    <v-app-bar flat class="">
+    <v-app-bar height="116" flat>
       <v-sheet width="100%" class="d-flex flex-column justify-space-between">
         <v-sheet width="100%" class="d-flex px-11 pt-10">
-          <h1>Shortlist</h1>
+          <h1 class="header-title">Shortlist</h1>
           <v-spacer></v-spacer>
           <RightMenu />
         </v-sheet>
 
         <v-list class="px-4 d-flex">
           <v-list-item
+            class="d-flex"
             v-for="(item, index) in items"
             :key="index"
             router
             :to="item.route"
             exact
-            :title="item.title"
             color="primary"
-          ></v-list-item>
+          >
+            <v-list-item-title
+              >{{ item.title }}
+              <v-chip color="primary">{{
+                item.quantity
+              }}</v-chip></v-list-item-title
+            >
+          </v-list-item>
         </v-list>
       </v-sheet>
     </v-app-bar>
@@ -37,17 +44,26 @@ let items = [
 let print = () => {};
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/variables';
 .v-app-bar {
-  height: 177px;
-  box-shadow: 0px 4px 6px rgba(217, 219, 233, 0.3);
+  height: 138px;
+  box-shadow: $shadow;
 }
 
-.v-app-bar .v-toolbar__content{
-    height: 100%;
+.header-title{
+  height: 72px;
 }
 
-.v-list-item--active{
-  border-bottom: 4px solid #6367E7;
+.v-list{
+  overflow-x: auto;
+}
+
+.v-list::-webkit-scrollbar {
+        height: 0px;
+    }
+
+.v-list-item--active {
+  border-bottom: 4px solid #6367e7;
 }
 </style>

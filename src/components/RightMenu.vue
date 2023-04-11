@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex pa-3 align-center">
+  <div class="header-right-menu pa-3">
     <notification />
     <v-sheet class="d-flex align-center">
       <v-divider vertical class="me-2" thickness="2px"></v-divider>
@@ -7,9 +7,8 @@
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn
-            :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-            @click="show = !show"
             v-bind="props"
+            :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
           ></v-btn>
         </template>
 
@@ -19,10 +18,12 @@
             title="Settings"
             prepend-icon="mdi-format-list-checks"
             active-color="primary"
-            router to="/account"
+            router
+            to="/account-settings"
           >
           </v-list-item>
           <v-list-item
+            @click="SignOut"
             value="logout"
             title="Log out"
             prepend-icon="mdi-export"
@@ -36,7 +37,32 @@
 </template>
 
 <script setup lang="ts">
+import { auth } from "@/firebaseInit";
+import router from '@/router/router'
+import { signOut, onAuthStateChanged } from "@firebase/auth";
 import notification from "./Notification.vue";
-console
-let show = false;
+import { ref } from "vue";
+
+let show = ref(false);
+
+let SignOut = () => {
+  signOut(auth)
+    .then(() => {
+      router.push({ name: "SignIn" });
+    })
+    .catch(() => {});
+};
 </script>
+
+<style scoped lang="scss">
+.header-right-menu {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 1050px) {
+  .header-right-menu {
+    display: none;
+  }
+}
+</style>

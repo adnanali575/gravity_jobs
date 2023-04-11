@@ -1,36 +1,33 @@
 <template>
   <div class="form-container">
-    <v-sheet
-      flat
-      height="100%"
-      class="login-form"
-    >
-      <div class="pa-3 d-flex flex-column align-center justify-center">
-        <img class="logo my-10" src="@/assets/icons/logo.svg" alt="" />
+    <v-sheet flat height="100%" class="login-form">
+      <div class="d-flex flex-column align-center justify-center">
+        <img class="logo my-8" src="@/assets/icons/logo.svg" alt="" />
         <v-sheet class="form-control">
           <slot name="form"></slot>
         </v-sheet>
       </div>
 
-      <v-sheet class="optional-navigation">
+      <v-sheet class="optional-navigation d-flex align-center justify-center">
         <slot name="optionalNavigation"></slot>
       </v-sheet>
     </v-sheet>
 
-    <div class="img-section d-flex justify-center align-center">
-      <div class="inner-box d-flex flex-column">
+    <div class="img-section">
+      <div class="inner-box d-flex">
+        <img class="mobile-banner" src="@/assets/images/mobile_banner.png" />
         <img
           class="desktop-banner"
           src="@/assets/images/desktop_banner.png"
           alt=""
         />
-        <img class="mobile-banner" src="@/assets/images/mobile_banner.png" />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/variables';
 .form-container {
   height: 100vh;
   display: grid;
@@ -52,28 +49,51 @@
 
 .img-section {
   background: url("@/assets/images/stars.png") center center fixed;
-  background-color: #140d33;
-}
-
-.inner-box {
-  margin-left: 85px;
+  background-color: #140D33;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mobile-banner {
   height: fit-content;
   width: 180px;
-  margin-top: -226px;
-  margin-left: -71px;
+  margin-top: 200px;
+  margin-right: -90px;
+  z-index: 1000;
+}
+
+.desktop-banner{
+  height: fit-content;
+}
+
+@media (min-width: 1700px){
+  .form-container{
+    grid-template-columns: 800px 1fr;
+  }
+
+  .form-control{
+    width: 500px ;
+  }
 }
 
 @media (max-width: 1340px) {
-  .form-box {
-    grid-template-rows: 1fr;
+  .form-container {
+    grid-template-columns: 1fr;
+  }
+
+  .form-control{
+    width: 450px;
   }
 
   .img-section {
     display: none;
-    /* background-color: #2f00ff; */
+  }
+}
+
+@media(max-width: 500px){
+  .form-control{
+    width: 85%;
   }
 }
 </style>
