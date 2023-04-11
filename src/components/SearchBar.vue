@@ -6,11 +6,18 @@
         <v-row no-gutters>
           <v-col cols="12" md="4">
             <SelectDropDown
-              v-model="stacks"
               label="Stacks Used"
               :multiple="true"
               :dropDownItems="stacksList"
             >
+              <template #controls="stacks">
+                <v-btn @click="clear" rounded variant="text" color="primary"
+                  >Clear</v-btn
+                >
+                <v-btn @click="save(stacks)" rounded flat color="primary"
+                  >Save</v-btn
+                >
+              </template>
             </SelectDropDown>
           </v-col>
 
@@ -18,7 +25,6 @@
 
           <v-col cols="12" md="4">
             <SelectDropDown
-              v-model="location"
               label="Location"
               :multiple="false"
               :dropDownItems="locationsList"
@@ -33,6 +39,12 @@
               :multiple="true"
               :dropDownItems="seniorityList"
             >
+              <template #controls>
+                <v-btn @click="clear" rounded variant="text" color="primary"
+                  >Clear</v-btn
+                >
+                <v-btn @click="save" rounded flat color="primary">Save</v-btn>
+              </template>
             </SelectDropDown>
           </v-col>
         </v-row>
@@ -60,17 +72,29 @@ let locationsList = ref<string[]>([
 ]);
 let seniorityList = ref<string[]>(["Junior", "Senior", "Lead", "CTO"]);
 
-let stacks = ref([]);
+let stacks = Array<string>();
 let location = ref([]);
 let seniority = ref([]);
 
 // For later use ....
 // console.log('First ----- ', JSON.parse(JSON.stringify(controls.value)))
 
+const save = (selectedStacks: Array<string>) => {
+  stacks = selectedStacks;
+};
+const clear = () => {};
+
 const search = () => {
+  if(stacks != Array<string>()){
+    console.log(stacks);
+  }
+  else{
+    alert("Please Save the value first")
+  }
+  // console.log(JSON.parse(JSON.stringify(stacks.value)));
 };
 
-store.dispatch("getData");
+// store.dispatch("getData");
 </script>
 
 <style lang="scss">

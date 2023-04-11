@@ -1,11 +1,9 @@
 <template>
   <v-select
-    :hide-selected="check"
     :label="label"
     :items="dropDownItems"
     :multiple="multiple"
-    :model-value="modelValue"
-    @input="$emit('update:modelValue')"
+    v-model="modelValue"
   >
     <template v-slot:append-item>
       <div v-if="multiple">
@@ -13,10 +11,7 @@
 
         <v-list-item>
           <div class="d-flex justify-space-between">
-            <v-btn @click="clear" rounded variant="text" color="primary"
-              >Clear</v-btn
-            >
-            <v-btn @click="save" rounded flat color="primary">Save</v-btn>
+            <slot name="controls" v-bind="modelValue"></slot>
           </div>
         </v-list-item>
       </div>
@@ -31,18 +26,9 @@ const props = defineProps<{
   dropDownItems: Array<string>;
   label: string;
   multiple: boolean;
-  modelValue: Array<string>;
 }>();
 
-const emit = defineEmits(["update:modelValue"]);
-
-let check = ref(false);
-
-const clear = () => {};
-
-const save = () => {
-  check.value = !check.value;
-};
+let modelValue = ref<string[]>([]);
 </script>
 
 <style lang="scss">
