@@ -12,13 +12,13 @@
             <BaseButton
               class="controls my-3"
               title="Resend a validation e-mail"
-              vari="flat"
+              variant="flat"
             />
             <p class="text-center">OR</p>
             <BaseButton
               class="controls my-3"
               title="Sign in"
-              vari="flat"
+              variant="flat"
               router
               to="/sign-in"
             />

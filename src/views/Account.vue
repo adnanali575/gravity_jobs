@@ -4,7 +4,7 @@
       <div class="py-6 d-flex justify-end">
         <v-btn
           v-if="formStatus"
-          variant="text"
+          variantant="text"
           color="primary"
           @click="enableform"
           >Edit</v-btn
@@ -18,13 +18,13 @@
                 @click="disableform"
                 class="btn"
                 title="Cancel"
-                vari="outlined"
+                variant="outlined"
               />
               <BaseButton
                 @click="update(userDetails)"
                 class="btn"
                 title="Update"
-                vari="flat"
+                variant="flat"
               />
             </div>
           </template>

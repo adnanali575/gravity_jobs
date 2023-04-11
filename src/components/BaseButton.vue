@@ -6,7 +6,7 @@
     class="base-btn text-capitalize"
     flat
     rounded
-    :variant="vari"
+    :variant="variant"
   >
     {{ title }}
   </v-btn>
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   title: string;
-  vari: "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
+  variant: "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
 }>();
 </script>
 

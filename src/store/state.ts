@@ -8,6 +8,7 @@ const state = {
   interviewingEmployees: Array<employeesInfoTypes>(),
   hiredEmployees: Array<employeesInfoTypes>(),
   employeeInfo: {} as employeesInfoTypes,
+  userId: ref<string>(""),
 
   logInLogOutAlert: ref(false),
 };

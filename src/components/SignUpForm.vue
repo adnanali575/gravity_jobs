@@ -42,7 +42,6 @@ const props = defineProps<{
   formStatus?: boolean;
 }>();
 
-console.log(props.accountInfo);
 
 let firstName = ref("");
 let lastName = ref("");

@@ -6,6 +6,7 @@ import {
   query,
   getDocs,
   where,
+  setDoc,
 } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
@@ -23,7 +24,16 @@ export default {
   signUp: ({}, payload: any) => {
     createUserWithEmailAndPassword(auth, payload.email, payload.password)
       .then((credential) => {
-        console.log(credential.user);
+        setDoc(doc(db, "user", credential.user.uid), {
+          firstName: "adnan",
+          lastName: "Doe",
+          companyName: "ABC Inc.",
+          role: "HR Manager",
+          numberOfRecruitments: 10,
+          email: "johndoe@example.com",
+          number: "+1 (555) 123-4567",
+          userId: credential.user.uid,
+        });
         router.push({ name: "Search" });
       })
       .catch((error) => {
@@ -33,10 +43,8 @@ export default {
 
   // Sign in ------------------------
   SignIn: ({}, payload: { email: string; password: string }) => {
-    console.log(payload.email, payload.password);
     signInWithEmailAndPassword(auth, payload.email, payload.password)
-      .then((credential) => {
-        console.log(credential.user);
+      .then(async (credential) => {
         router.push({ name: "Search" });
       })
       .catch((error) => {
@@ -44,24 +52,29 @@ export default {
       });
   },
 
+  // Setting Current User ID -------------------------
+
+  setCurrentUserDetails: ({ commit }: { commit: Commit }, payload: string) => {
+    commit("setCurrentUserDetails", payload);
+  },
+
   // Post Condidate Details ------------------------
-  postJob: ({}, payload: jobPostingObject) => {
-    console.log(payload);
-    const colRef = collection(db, "user");
-    addDoc(colRef, payload)
-      .then((response) => {
-        console.log(response.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  postJob: ({ state }: { state: any }, payload: jobPostingObject) => {
+
+    setDoc(doc(db, "jobs", state.userId), payload)
+    .then((credentials)=>{
+      console.log('Job Posted Successfully')
+    })
+    .catch(()=>{
+      console.log('Some thing went wrong.....!')
+    })
   },
 
   // Get Employee Data By Query Search Data ------------------------
   getData: ({ commit }: { commit: Commit }) => {
-    const searchValues = ['Vue js', 'React']
+    const searchValues = ["Vue js", "React"];
     const q = query(
-      collection(db, "user"),
+      collection(db, "jobs"),
       where("stacks", "array-contains-any", searchValues)
     );
     getDocs(q)
@@ -81,24 +94,20 @@ export default {
     payload: employeesInfoTypes
   ) => {
     const q = query(
-      collection(db, "employees"),
-      where("email", "==", "test2@gmail.com")
+      collection(db, "user"),
+      where("email", "==", payload.email)
     );
     getDocs(q)
-      .then((querySnapshot) => {
-        // const doc = querySnapshot.docs[0];
-        console.log("Test");
-        // console.log(querySnapshot.docs[0].data());
-        // querySnapshot.docs.forEach((e) => {
-        //   console.log(e);
-        // });
-        // return doc.id;
+      .then((querySnap) => {
+        querySnap.forEach((e) => {
+          commit("setShowProfile", e.data());
+          console.log(e.data());
+          router.push("/profile");
+        });
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
-
-    // router.push('/profile')
   },
 
   // Get Employee of Status Shortlist ------------------------

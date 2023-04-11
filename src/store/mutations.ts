@@ -1,12 +1,16 @@
 import type { employeesInfoTypes } from "@/types";
 
 export default {
-  SetGetData: (state:any, payload: employeesInfoTypes) => {
+  SetGetData: (state: any, payload: employeesInfoTypes) => {
     state.employeesInfo.push(payload);
   },
 
-  setShowProfile: (state: any, payload:employeesInfoTypes)=>{
-    state.employeeInfo = payload
+  setShowProfile: (state: any, payload: employeesInfoTypes) => {
+    state.employeeInfo = payload;
+  },
+
+  setCurrentUserDetails: (state: any, payload: string) => {
+    state.userId = payload;
   },
 
   SetGetShortlistEmployees: (state: any, payload: employeesInfoTypes) => {

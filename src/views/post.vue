@@ -16,6 +16,7 @@
         <div class="field-box">
           <div class="drop-down input bg-input-background">
             <SelectDropDown
+              v-model="stacks"
               label="Stacks Used"
               :multiple="true"
               :dropDownItems="['Vue js', 'React', 'Angular', 'jQuery']"
@@ -26,11 +27,7 @@
                 <v-list-item>
                   <div class="d-flex justify-space-between">
                     <v-btn rounded variant="text" color="primary">Clear</v-btn>
-                    <v-btn
-                      @click="setStacks(stacksArray)"
-                      rounded
-                      flat
-                      color="primary"
+                    <v-btn @click="setStacks" rounded flat color="primary"
                       >Save</v-btn
                     >
                   </div>
@@ -41,6 +38,7 @@
 
           <div class="drop-down input bg-input-background">
             <SelectDropDown
+              v-model="seniority"
               label="Seniority"
               :multiple="true"
               :dropDownItems="['Junior', 'Senior', 'Lead', 'CTO']"
@@ -51,11 +49,7 @@
                 <v-list-item>
                   <div class="d-flex justify-space-between">
                     <v-btn rounded variant="text" color="primary">Clear</v-btn>
-                    <v-btn
-                      @click="setSeniority(seniority)"
-                      rounded
-                      flat
-                      color="primary"
+                    <v-btn @click="setSeniority" rounded flat color="primary"
                       >Save</v-btn
                     >
                   </div>
@@ -91,18 +85,18 @@
           <BaseInput
             class="input"
             v-model="educatedFrom"
-            label="Country form which educated"
+            label="Country from which educated"
           />
         </div>
         <input class="my-8" type="file" />
       </v-form>
       <div class="controls my-3">
-        <BaseButton class="control-btn" title="Cancel" vari="outlined" />
+        <BaseButton class="control-btn" title="Cancel" variant="outlined" />
         <BaseButton
           @click="postJob"
           class="control-btn"
           title="Post"
-          vari="flat"
+          variant="flat"
         />
       </div>
     </v-sheet>
@@ -138,7 +132,6 @@ let educatedFrom = ref("");
 
 const setStacks = (stacksArray: Array<string>) => {
   stacks.value = stacksArray;
-  console.log(stacks.value);
 };
 
 const setSeniority = (stacksArray: Array<string>) => {
@@ -163,6 +156,7 @@ const postJob = () => {
     institution: institution.value,
     passingYear: passingYear.value,
     educatedFrom: educatedFrom.value,
+    userId: store.state.userId,
   });
 };
 </script>
@@ -205,18 +199,18 @@ const postJob = () => {
     padding: 50px 80px;
     box-shadow: $shadow;
   }
-  
+
   .drop-down {
     border-radius: 40px;
     overflow: hidden;
     margin: 15px 0px;
   }
-  
+
   .controls {
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    
+
     :nth-child(2) {
       margin-left: 30px;
     }
@@ -245,22 +239,22 @@ const postJob = () => {
   .form-container {
     padding: 30px 20px !important;
   }
-  
+
   .controls {
     justify-content: space-evenly !important;
   }
   .field-box {
     flex-direction: column;
-    
+
     .input {
       width: 100% !important;
       margin-top: 0px !important;
     }
   }
-  
+
   .info-field-box {
     flex-direction: column;
-    
+
     .input {
       width: 100% !important;
     }
@@ -388,12 +382,12 @@ const postJob = () => {
         <input class="my-8" type="file" />
       </v-form>
       <div class="controls my-3">
-        <BaseButton class="control-btn" title="Cancel" vari="outlined" />
+        <BaseButton class="control-btn" title="Cancel" variant="outlined" />
         <BaseButton
         @click="postJob"
           class="control-btn"
           title="Post"
-          vari="flat"
+          variant="flat"
           />
         </div>
     </v-sheet>
@@ -436,7 +430,6 @@ const setSeniority = (stacksArray: Array<string>) => {
 };
 
 const postJob = () => {
-  console.log(seniority.value);
   
   store.dispatch("postJob", {
     firstName: firstName.value,

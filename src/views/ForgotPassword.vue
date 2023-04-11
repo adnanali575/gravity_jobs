@@ -17,7 +17,7 @@
               @click="resetPassword"
               class="controls mt-6"
               title="Submit"
-              vari="flat"
+              variant="flat"
             />
           </v-sheet>
         </div>
@@ -30,7 +30,7 @@
 import SignInForm from "@/components/SignInForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import router from '@/router/router'
+import router from "@/router/router";
 import { auth } from "@/firebaseInit";
 import { sendPasswordResetEmail } from "@firebase/auth";
 
@@ -39,11 +39,9 @@ let email: string = "";
 let resetPassword = () => {
   sendPasswordResetEmail(auth, email)
     .then(() => {
-      // Password reset email sent successfully
       console.log("Password reset email sent successfully");
     })
     .catch((error) => {
-      // An error occurred while sending the password reset email
       console.error(error);
     });
 };
@@ -54,7 +52,7 @@ const submit = () => {
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 
 .instructions {
   margin: auto;

@@ -3,21 +3,23 @@
     <v-sheet class="bg-background mx-2 ma-md-3">
       <v-card height="fit-content" variant="flat" class="pa-4 employee-card">
         <v-sheet class="d-flex">
-          <div @click="showProfile">
-            <v-avatar class="profile-avatar">
-              <img
-                src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-              />
-            </v-avatar>
+          <div>
+
+            <v-btn class="card-btn" icon="" flat router to="/">
+              <img :src="employee.imageurl" />
+            </v-btn >
           </div>
 
           <v-sheet
             class="d-flex flex-column align-start justify-space-evenly px-4"
           >
-            <b>{{ employee.firstName }} {{ employee.lastName }}</b>
-            <v-chip :class="`bg-${employee.seniority[0]} text-${employee.seniority[0]}-text font-weight-bold px-4`">{{
-              employee.seniority[0]
-            }}</v-chip>
+            <p class="employee-name">
+              {{ employee.firstName }} {{ employee.lastName }}
+            </p>
+            <v-chip
+              :class="`bg-${employee.seniority[0]} text-${employee.seniority[0]}-text font-weight-bold px-4`"
+              >{{ employee.seniority[0] }}</v-chip
+            >
           </v-sheet>
         </v-sheet>
 
@@ -62,25 +64,25 @@
             v-if="nullStatus"
             @click="updateStatus"
             title="Add Shortlit"
-            vari="outlined"
+            variant="outlined"
           />
           <BaseButton
             v-if="contacted"
             @click="updateStatus"
             title="Contact"
-            vari="flat"
+            variant="flat"
           />
           <BaseButton
             v-if="interview"
             @click="updateStatus"
             title="Interview"
-            vari="flat"
+            variant="flat"
           />
           <BaseButton
             v-if="hire"
             @click="updateStatus"
             title="Hire"
-            vari="flat"
+            variant="flat"
           />
         </div>
       </v-card>
@@ -122,11 +124,29 @@ const updateStatus = () => {};
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .employee-card {
   filter: drop-shadow($shadow);
   width: 100%;
   border-radius: 8px;
+
+  .employee-name {
+    // font-family: "itc-fonts";
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 30px;
+    letter-spacing: 0.75px;
+  }
+
+  .card-btn{
+    width: 88px !important;
+    height: 88px !important;
+    overflow: hidden;
+
+    img{
+      width: 100%;
+    }
+  }
 }
 
 .profile-avatar {

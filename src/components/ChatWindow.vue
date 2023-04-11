@@ -76,9 +76,10 @@
           <BaseInput
             v-model="messageText"
             placeholder="Write your message...."
+            @keypress.enter="sendMessage"
           />
         </v-sheet>
-        <v-btn flat icon="mdi-send" class="send-btn" color="primary"></v-btn>
+        <v-btn flat icon="mdi-send" @click="sendMessage" class="send-btn" color="primary"></v-btn>
       </div>
     </div>
   </div>
@@ -90,6 +91,9 @@ import WriteMessagePopUp from "./WriteMessagePopUp.vue";
 import { ref } from "vue";
 
 let messageText = ref("");
+
+const sendMessage = ()=>{
+}
 </script>
 
 <style scoped lang="scss">

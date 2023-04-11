@@ -20,7 +20,7 @@
               @action="SignIn"
               class="controls mt-6"
               title="Sign in"
-              vari="flat"
+              variant="flat"
             />
             <span class="d-flex justify-end">
               <v-btn

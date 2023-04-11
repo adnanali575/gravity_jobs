@@ -1,3 +1,19 @@
+@font-face {
+    font-family: 'itc-fonts';
+    src:
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-BkCnObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-BkObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-BoldCnObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-BoldObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-DemiCnObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-DemiObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-MdCnObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-MdObl.otf') format('truetype'),
+    url('../assets/fonts/itcavantgardestdmdobl/ITCAvantGardeStd-XLtCnObl.otf') format('truetype');
+    // font-weight: 700;
+    // font-style: normal;
+  }
+    
     $primary: #6367E7;
     $white: #FFFFFF;
     $black: #000;

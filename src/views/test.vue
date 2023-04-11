@@ -52,7 +52,9 @@
                       <v-btn rounded variant="text" color="primary"
                         >Clear</v-btn
                       >
-                      <v-btn class="search-btn" flat color="primary">Save</v-btn>
+                      <v-btn class="search-btn" flat color="primary"
+                        >Save</v-btn
+                      >
                     </div>
                   </v-list-item>
                 </template>
@@ -93,17 +95,17 @@ import { computed } from "@vue/reactivity";
     opacity: 0;
   }
 
-  .v-btn--icon.v-btn--density-default{
+  .v-btn--icon.v-btn--density-default {
     width: 48px;
     height: 48px !important;
   }
 
   .v-select .v-field .v-text-field__prefix,
-    .v-select .v-field .v-text-field__suffix,
-    .v-select .v-field .v-field__input,
-    .v-select .v-field.v-field .v-label {
-      color: #000;
-    }
+  .v-select .v-field .v-text-field__suffix,
+  .v-select .v-field .v-field__input,
+  .v-select .v-field.v-field .v-label {
+    color: #000;
+  }
 }
 
 .inputs-box {
@@ -153,7 +155,7 @@ import { computed } from "@vue/reactivity";
       display: none;
     }
 
-    .v-btn--icon.v-btn--density-default{
+    .v-btn--icon.v-btn--density-default {
       border-radius: 40px;
       width: 100%;
       height: 58px !important;
@@ -162,62 +164,13 @@ import { computed } from "@vue/reactivity";
   }
 }
 
-@media(max-width: 765px){
-
-  .search-bar-container{
+@media (max-width: 765px) {
+  .search-bar-container {
     width: 100%;
   }
 
-  .search-bar{
+  .search-bar {
     width: 100%;
   }
 }
 </style>
-
-<!-- <template>
-  <TestChild>
-    <template #item="items">
-      <div class="item" v-for="(item, index) in items" :key="index">
-        <p>{{ item.body }}</p>
-        <p class="meta">by {{ item.username }} | {{ item.likes }} likes</p>
-      </div>
-      <v-btn @click="test(items)">Print</v-btn>
-    </template>
-  </TestChild>
-
-  <div width="100%" height="50%" class="d-flex justify-center align-center bg-background-menu">
-    <SearchBar/>
-  </div>
-</template>
-
-<script setup lang="ts">
-import TestChild from "@/components/testChild.vue";
-import SearchBar from "@/components/SearchBar.vue";
-
-let test = (items: any)=>{
-    console.log(items)
-}
-
-// console.log(body)
-</script>
-
-<style scoped lang="scss">
-.meta {
-  font-size: 0.8em;
-  color: #42b883;
-}
-
-.item{
-    border: 1px solid #fff;
-    padding: 20px;
-    cursor: pointer;
-
-    :nth-child(1){
-        color: #fff;
-    }
-
-    :nth-child(2){
-        color: #000000;
-    }
-}
-</style> -->

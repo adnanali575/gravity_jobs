@@ -22,6 +22,7 @@
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
+import store from "./store/store";
 
 const route = useRoute();
 const headerTitle = computed(() => {
@@ -33,7 +34,7 @@ const headerTitle = computed(() => {
 const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log(user.uid)
+    store.dispatch('setCurrentUserDetails', user.uid)
     console.log('Signed In')
     // ...
   } else {

@@ -46,6 +46,7 @@ const router = createRouter({
         BottomNavBar: BottomNavBar,
       },
     },
+    { path: "/search/:id", name: "profile", component: Profile },
     {
       path: "/shortlist",
       name: "shortlist",

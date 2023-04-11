@@ -41,4 +41,5 @@ export type jobPostingObject = {
     skillStartingYear: string;
     stacks: string[];
     status: string;
+    userId: string;
   }

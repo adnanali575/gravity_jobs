@@ -8,7 +8,7 @@
               <BaseButton
                 @click="signUp(userDetails)"
                 title="Sign up"
-                vari="flat"
+                variant="flat"
               />
             </template>
           </SignUpForm>

@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <!-- <div class="profile">
     <div
       class="buttons py-7 d-flex align-center justify-space-between px-10 px-md-14"
     >
@@ -7,7 +7,7 @@
       <span class="d-flex align-center">
         <base-button
           class="add-btn me-8 me-md-6"
-          vari="outlined"
+          variant="outlined"
           title="Add Shortlist"
         />
         <v-btn
@@ -33,23 +33,20 @@
         </v-col>
       </v-row>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">
-import BaseButton from "@/components/BaseButton.vue";
-import employeeCard from "@/components/EmployeeCard.vue";
-import EmployeeInfo from "@/components/EmployeeInfo.vue";
-import store from "@/store/store";
-import { computed } from "@vue/reactivity";
-import type { employeesInfoTypes } from "@/types";
+// import BaseButton from "@/components/BaseButton.vue";
+// import employeeCard from "@/components/EmployeeCard.vue";
+// import EmployeeInfo from "@/components/EmployeeInfo.vue";
+// import store from "@/store/store";
+// import { computed } from "@vue/reactivity";
+// import type { employeesInfoTypes } from "@/types";
 
-const employeeInfo = computed(()=>{
-  return store.state.employeeInfo
-})
-
-// console.log(store.state.employeeInfo.value)
-console.log(employeeInfo.value)
+// const employeeInfo = computed(()=>{
+//   return store.state.employeeInfo
+// })
 
 </script>
 
