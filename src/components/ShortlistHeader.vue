@@ -33,15 +33,31 @@
 
 <script setup lang="ts">
 import RightMenu from "@/components/RightMenu.vue";
+import store from "@/store/store";
+import { computed } from "@vue/reactivity";
+
+let shortlisted = computed(()=>{
+  return store.state.shortListedEmployees.length;
+})
+
+let contacted = computed(()=>{
+  return store.state.contactedEmployees.length;
+})
+
+let interviewing = computed(()=>{
+  return store.state.interviewingEmployees.length;
+})
+
+let hired = computed(()=>{
+  return store.state.hiredEmployees.length;
+})
 
 let items = [
-  { title: "Shortlist", quantity: 2, route: "/shortlist" },
-  { title: "Contacted", quantity: 12, route: "/shortlist/contacted" },
-  { title: "Interviewing", quantity: 8, route: "/shortlist/interviewing" },
-  { title: "Hired", quantity: 0, route: "/shortlist/hired" },
+  { title: "Shortlist", quantity: shortlisted, route: "/shortlist" },
+  { title: "Contacted", quantity: contacted, route: "/shortlist/contacted" },
+  { title: "Interviewing", quantity: interviewing, route: "/shortlist/interviewing" },
+  { title: "Hired", quantity: hired, route: "/shortlist/hired" },
 ];
-
-let print = () => {};
 </script>
 
 <style scoped lang="scss">

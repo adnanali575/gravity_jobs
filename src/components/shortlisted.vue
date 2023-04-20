@@ -19,13 +19,8 @@
 
 <script setup lang="ts">
 import EmployeeCard from "./EmployeeCard.vue";
-import { onMounted } from "vue";
 import store from "@/store/store";
-import { computed } from "@vue/reactivity";
-
-onMounted(() => {
-  store.dispatch("getShortlistEmployees", "shortlisted");
-});
+import { computed} from "@vue/reactivity";
 
 let shortlistedEmployees = computed(() => {
   return store.state.shortListedEmployees;

@@ -38,9 +38,8 @@
 import SignUpForm from "@/components/SignUpForm.vue";
 import SignInForm from "@/components/SignInForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import type { signUpObject } from "@/types";
-
 import store from "@/store/store";
+import type { signUpObject } from "@/types";
 
 let signUp = (userDetails: signUpObject) => {
   store.dispatch("signUp", userDetails);
@@ -48,9 +47,4 @@ let signUp = (userDetails: signUpObject) => {
 </script>
 
 <style scoped lang="scss">
-.form-control {
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr 40px;
-}
 </style>

@@ -23,9 +23,6 @@ import { onMounted } from "vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
 
-onMounted(() => {
-  store.dispatch("getHiredEmployees", "hired");
-});
 
 let hiredEmployees = computed(() => {
   return store.state.hiredEmployees;

@@ -44,7 +44,7 @@
 }
 
 .form-control {
-  width: 350px;
+  width: 400px;
 }
 
 .img-section {

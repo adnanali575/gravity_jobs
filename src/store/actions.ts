@@ -7,33 +7,42 @@ import {
   getDocs,
   where,
   setDoc,
+  updateDoc,
+  onSnapshot,
+  orderBy,
+  arrayUnion,
 } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { auth } from "@/firebaseInit";
 import router from "@/router/router";
 import db from "@/firebaseInit";
 import type { Commit } from "vuex";
-import type { jobPostingObject } from "@/types";
-import type { employeesInfoTypes } from "@/types";
+import type {
+  Messages,
+  State,
+  signUpObject,
+  UserDetails,
+  jobPostingObject,
+  employeesInfoTypes,
+} from "@/types";
+
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import store from "./store";
 
 export default {
   // Sign up ------------------------
-  signUp: ({}, payload: any) => {
+  signUp: ({}, payload: signUpObject) => {
+    console.log(payload);
     createUserWithEmailAndPassword(auth, payload.email, payload.password)
       .then((credential) => {
-        setDoc(doc(db, "user", credential.user.uid), {
-          firstName: "adnan",
-          lastName: "Doe",
-          companyName: "ABC Inc.",
-          role: "HR Manager",
-          numberOfRecruitments: 10,
-          email: "johndoe@example.com",
-          number: "+1 (555) 123-4567",
-          userId: credential.user.uid,
-        });
+        setDoc(doc(db, "users", credential.user.uid), payload);
         router.push({ name: "Search" });
       })
       .catch((error) => {
@@ -52,57 +61,185 @@ export default {
       });
   },
 
-  // Setting Current User ID -------------------------
+  // User Sign Out -------------------------
 
-  setCurrentUserDetails: ({ commit }: { commit: Commit }, payload: string) => {
-    commit("setCurrentUserDetails", payload);
+  signOut: () => {
+    signOut(auth)
+      .then(() => {
+        router.push("/sign-in");
+      })
+      .catch((error) => {
+        alert("Email could not sent");
+      });
   },
 
-  // Post Condidate Details ------------------------
-  postJob: ({ state }: { state: any }, payload: jobPostingObject) => {
+  // Sending Reset Email -------------------------
 
-    setDoc(doc(db, "jobs", state.userId), payload)
-    .then((credentials)=>{
-      console.log('Job Posted Successfully')
-    })
-    .catch(()=>{
-      console.log('Some thing went wrong.....!')
-    })
-  },
-
-  // Get Employee Data By Query Search Data ------------------------
-  getData: ({ commit }: { commit: Commit }) => {
-    const searchValues = ["Vue js", "React"];
-    const q = query(
-      collection(db, "jobs"),
-      where("stacks", "array-contains-any", searchValues)
-    );
-    getDocs(q)
-      .then((querySnap) => {
-        querySnap.forEach((e) => {
-          commit("SetGetData", e.data());
-        });
+  resetPassword: ({}, payload: string) => {
+    sendPasswordResetEmail(auth, payload)
+      .then(() => {
+        console.log("Password reset email sent successfully");
+        router.push("/reset-confirm");
       })
       .catch((error) => {
         console.error(error);
       });
   },
 
-  // Show profile for relevant Employee ------------------------
-  showProfile: (
-    { commit }: { commit: Commit },
-    payload: employeesInfoTypes
+  // Update Profile of Current User -------------------------
+  updateProfile: ({}, payload: signUpObject) => {
+    console.log(payload);
+
+    const docRef = db.collection("users").doc(payload.userId);
+
+    docRef
+      .update(payload)
+      .then(() => {
+        console.log("Document updated successfully.");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  },
+
+  // Setting Current User Details -------------------------
+  setCurrentUserDetails: (
+    { commit, state }: { commit: Commit; state: State },
+    payload: string
   ) => {
-    const q = query(
-      collection(db, "user"),
-      where("email", "==", payload.email)
-    );
+    store.state.bodyPreLoader = true;
+    onSnapshot(doc(db, "users", payload), (doc: any) => {
+      let data = { ...doc.data(), userId: payload };
+      commit("setCurrentUserDetails", data);
+      store.state.bodyPreLoader = false;
+
+      state.shortListedEmployees = Array<employeesInfoTypes>();
+
+      data.shortlisted.forEach((e: string) => {
+        db.collection("jobs")
+          .doc(e)
+          .get()
+          .then((doc) => {
+            let data = { ...doc.data(), docId: doc.id };
+            commit("SetShortlistEmployees", data);
+          });
+      });
+
+      state.contactedEmployees = Array<employeesInfoTypes>();
+      data.contacted.forEach((e: string) => {
+        db.collection("jobs")
+          .doc(e)
+          .get()
+          .then((doc) => {
+            let data = { ...doc.data(), docId: doc.id };
+            commit("SetContactedEmployees", data);
+          });
+      });
+      state.interviewingEmployees = Array<employeesInfoTypes>();
+
+      data.interviewing.forEach((e: string) => {
+        db.collection("jobs")
+          .doc(e)
+          .get()
+          .then((doc) => {
+            let data = { ...doc.data(), docId: doc.id };
+            commit("setInterviewingEmployees", data);
+          });
+      });
+
+      state.hiredEmployees = Array<employeesInfoTypes>();
+      data.hired.forEach((e: string) => {
+        db.collection("jobs")
+          .doc(e)
+          .get()
+          .then((doc) => {
+            let data = { ...doc.data(), docId: doc.id };
+            commit("setHiredEmployees", data);
+          });
+      });
+    });
+  },
+
+  // Post Condidate Details for job ------------------------
+  getData: async (
+    { commit, state }: { commit: Commit; state: State },
+    payload: {
+      stacks: Array<string>;
+      location: string;
+      seniority: Array<string>;
+    }
+  ) => {
+    let employees = Array<employeesInfoTypes>();
+
+    try {
+      let docRef = db.collection("jobs");
+
+      const snapshot1 = await docRef
+        .where("stacks", "array-contains-any", payload.stacks)
+        .get();
+
+      snapshot1.forEach((doc) => {
+        let data = { ...doc.data(), docId: doc.id };
+        employees.push(data as employeesInfoTypes);
+      });
+
+      const snapshot2 = await docRef
+        .where("location", "==", payload.location)
+        .get();
+
+      snapshot2.forEach((doc) => {
+        let data = { ...doc.data(), docId: doc.id };
+        employees.push(data as employeesInfoTypes);
+      });
+
+      const snapshot3 = await docRef
+        .where("seniority", "array-contains-any", payload.seniority)
+        .get();
+
+      snapshot3.forEach((doc) => {
+        let data = { ...doc.data(), docId: doc.id };
+        employees.push(data as employeesInfoTypes);
+      });
+
+      function removeDuplicates(arr: Array<employeesInfoTypes>) {
+        let commonEmployees = Array<employeesInfoTypes>();
+        let ids = new Set();
+
+        for (let obj of arr) {
+          if (!ids.has(obj.docId)) {
+            ids.add(obj.docId);
+            commonEmployees.push(obj);
+          }
+        }
+
+        return commonEmployees;
+      }
+
+      let commonEmployees = removeDuplicates(employees);
+      commit("SetGetData", commonEmployees);
+      router.push("/search");
+    } catch (error) {
+      console.log("Error retrieving employee data: ", error);
+    }
+  },
+
+  // Get Information of all User --------------
+  getUsersDetails: ({ commit, state }: { commit: Commit; state: State }) => {
+    onSnapshot(query(collection(db, "users")), (doc) => {
+      state.usersDetails = Array<UserDetails>();
+      doc.forEach((doc) => {
+        commit("setUsersDetails", { ...doc.data(), userId: doc.id });
+      });
+    });
+  },
+
+  // Get profile Details for relevant Employee ------------------------
+  showProfile: ({ commit }: { commit: Commit }, payload: string) => {
+    const q = query(collection(db, "jobs"), where("userId", "==", payload));
     getDocs(q)
       .then((querySnap) => {
         querySnap.forEach((e) => {
           commit("setShowProfile", e.data());
-          console.log(e.data());
-          router.push("/profile");
         });
       })
       .catch((error) => {
@@ -110,62 +247,94 @@ export default {
       });
   },
 
-  // Get Employee of Status Shortlist ------------------------
-  getShortlistEmployees: ({ commit }: { commit: Commit }, payload: string) => {
-    const q = query(collection(db, "user"), where("status", "==", payload));
-    getDocs(q)
-      .then((querySnap) => {
-        querySnap.forEach((e) => {
-          commit("SetGetShortlistEmployees", e.data());
-        });
+  // ----------------------------------------------------------------------------------------
+  // Update Employee Status ------------------------
+  updateEmployeeStatus: (
+    {},
+    payload: {
+      docId: string;
+      userId: string;
+      fieldRef: string;
+      arrayToRemove: string;
+    }
+  ) => {
+    const docRef = db.collection("users").doc(payload.userId);
+
+    docRef
+      .update({
+        [payload.fieldRef]: arrayUnion(payload.docId),
+      })
+      .then(() => {
+        if (payload.arrayToRemove) {
+          const docRef = db.collection("users").doc(payload.userId);
+          docRef;
+          docRef.update({
+            [payload.arrayToRemove]: firebase.firestore.FieldValue.arrayRemove(
+              payload.docId
+            ),
+          });
+        }
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error updating document: ", error);
       });
   },
 
-  // Get Employees of Status Contacted ------------------------
-  getContactedEmployees: ({ commit }: { commit: Commit }, payload: string) => {
-    const q = query(collection(db, "user"), where("status", "==", payload));
-    getDocs(q)
-      .then((querySnap) => {
-        querySnap.forEach((e) => {
-          commit("SetGetContactedEmployees", e.data());
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  // Post Condidate Details for job ------------------------
+  terminateEmployee: (
+    { state }: { state: any },
+    payload: { docId: string; userId: string; arrayToRemove: string }
+  ) => {
+    const docRef = db.collection("users").doc(payload.userId);
+    docRef;
+    docRef.update({
+      [payload.arrayToRemove]: firebase.firestore.FieldValue.arrayRemove(
+        payload.docId
+      ),
+    });
   },
 
-  // Get Employees of Status Interviewing ------------------------
-  getInterviewingEmployees: (
-    { commit }: { commit: Commit },
+  // Get Message of users ------------------------
+  getMessages: (
+    { commit, state }: { commit: Commit; state: State },
     payload: string
   ) => {
-    const q = query(collection(db, "user"), where("status", "==", payload));
-    getDocs(q)
-      .then((querySnap) => {
-        querySnap.forEach((e) => {
-          commit("setGetInterviewingEmployees", e.data());
+    console.log("=>", payload);
+    onSnapshot(
+      query(
+        collection(db, "users/" + "XCwR3m7OdabR6ODfQpHUfCgchYj2" + "/messages"),
+        orderBy("date", "desc")
+      ),
+      (snapshot: any) => {
+        state.messages = Array<Messages>();
+        snapshot.forEach((e: any) => {
+          const data = e.data();
+          const timestamp = data.date.toDate();
+          data.hours = timestamp.getHours();
+          data.minutes = timestamp.getMinutes();
+          commit("setMessages", data);
         });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      }
+    );
   },
 
-  // Get Employee of Status Hired ------------------------
-  getHiredEmployees: ({ commit }: { commit: Commit }, payload: string) => {
-    const q = query(collection(db, "user"), where("status", "==", payload));
-    getDocs(q)
-      .then((querySnap) => {
-        querySnap.forEach((e) => {
-          commit("setGetHiredEmployees", e.data());
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  sendMessage: ({ state }: { state: State }, payload: string) => {
+    const date = new Date();
+    state.messages = Array<Messages>();
+    addDoc(
+      collection(db, "users/" + "XCwR3m7OdabR6ODfQpHUfCgchYj2" + "/messages"),
+      {
+        text: payload,
+        date: date,
+        seen: false,
+        senderId: "XCwR3m7OdabR6ODfQpHUfCgchYj2",
+        receiverId: "XCwR3m7OdabR6ODfQpHUfCgchYj2",
+        userName: "Waseem Akram",
+        userProfile:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmrRJhr_dsfrKGahCBCz2tNhmPWUpu7qs9bg&usqp=CAU",
+      }
+    ).then(() => {
+      console.log("Your Message Sent With ID: ", payload);
+    });
   },
 };

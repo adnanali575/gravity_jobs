@@ -4,10 +4,15 @@
       <v-card height="fit-content" variant="flat" class="pa-4 employee-card">
         <v-sheet class="d-flex">
           <div>
-
-            <v-btn class="card-btn" icon="" flat router to="/">
+            <v-btn
+              class="card-btn"
+              icon=""
+              flat
+              router
+              :to="'/search/' + employee.userId"
+            >
               <img :src="employee.imageurl" />
-            </v-btn >
+            </v-btn>
           </div>
 
           <v-sheet
@@ -16,10 +21,12 @@
             <p class="employee-name">
               {{ employee.firstName }} {{ employee.lastName }}
             </p>
-            <v-chip
-              :class="`bg-${employee.seniority[0]} text-${employee.seniority[0]}-text font-weight-bold px-4`"
-              >{{ employee.seniority[0] }}</v-chip
+            <span class="d-flex flex-wrap">
+              <v-chip class="mx-1" v-for="(emplo, index) in employee.seniority" :key="index"
+              :class="`bg-${emplo} text-${emplo}-text font-weight-bold px-4`"
+              >{{ emplo }}</v-chip
             >
+            </span>
           </v-sheet>
         </v-sheet>
 
@@ -59,31 +66,8 @@
           </v-sheet>
         </v-sheet>
 
-        <div class="mt-5">
-          <BaseButton
-            v-if="nullStatus"
-            @click="updateStatus"
-            title="Add Shortlit"
-            variant="outlined"
-          />
-          <BaseButton
-            v-if="contacted"
-            @click="updateStatus"
-            title="Contact"
-            variant="flat"
-          />
-          <BaseButton
-            v-if="interview"
-            @click="updateStatus"
-            title="Interview"
-            variant="flat"
-          />
-          <BaseButton
-            v-if="hire"
-            @click="updateStatus"
-            title="Hire"
-            variant="flat"
-          />
+        <div class="mt-5" v-if="profilePage">
+          <EmployeeControls :employee="employee"/>
         </div>
       </v-card>
     </v-sheet>
@@ -92,9 +76,11 @@
 
 <script setup lang="ts">
 import store from "@/store/store";
-import BaseButton from "./BaseButton.vue";
+import EmployeeControls from "./EmployeeControls.vue";
 import type { employeesInfoTypes } from "@/types";
 import { computed } from "@vue/reactivity";
+import { useRoute } from "vue-router";
+const route = useRoute();
 
 const props = defineProps<{
   employee: employeesInfoTypes;
@@ -104,23 +90,10 @@ const showProfile = () => {
   store.dispatch("showProfile", props.employee);
 };
 
-const nullStatus = computed(() => {
-  return props.employee.status === "";
+const profilePage = computed(() => {
+  if (route.name === "profile") return false;
+  else return true;
 });
-
-const contacted = computed(() => {
-  return props.employee.status === "shortlisted";
-});
-
-const interview = computed(() => {
-  return props.employee.status === "contacted";
-});
-
-const hire = computed(() => {
-  return props.employee.status === "interview";
-});
-
-const updateStatus = () => {};
 </script>
 
 <style scoped lang="scss">
@@ -138,12 +111,12 @@ const updateStatus = () => {};
     letter-spacing: 0.75px;
   }
 
-  .card-btn{
+  .card-btn {
     width: 88px !important;
     height: 88px !important;
     overflow: hidden;
 
-    img{
+    img {
       width: 100%;
     }
   }

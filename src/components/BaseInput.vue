@@ -1,16 +1,12 @@
 <template>
-  <div class="base-input">
-    <v-card width="100%" class="mx-auto" variant="flat">
-      <v-text-field
-        :type="type"
-        :label="label"
-        :placeholder="placeholder"
-        class="my-2"
-        :model-value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-      ></v-text-field>
-    </v-card>
-  </div>
+  <v-text-field
+    class="text-field bg-input-background"
+    :type="type"
+    :label="label"
+    :placeholder="placeholder"
+    :model-value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+  ></v-text-field>
 </template>
 
 <script setup lang="ts">
@@ -26,6 +22,20 @@ const emit = defineEmits(["update:modelValue"]);
 
 <style lang="scss">
 @import "@/scss/variables";
+
+.text-field {
+  border-radius: 40px;
+  height: fit-content;
+  overflow: hidden;
+
+  .v-field--active input {
+    background-color: $input-background;
+  }
+}
+
+.v-input--density-default {
+  height: 56px !important;
+}
 
 .base-input .v-text-field label {
   color: $label-placeholder;

@@ -47,10 +47,9 @@ const searchBarToggle = () => {
 .v-app-bar {
   height: 104px;
   box-shadow: $shadow;
-}
-
-.header-logo {
-  display: none !important;
+  
+  .header-logo {
+    display: none;
 }
 
 .src-bar {
@@ -71,11 +70,12 @@ const searchBarToggle = () => {
 
 .search-btn-icon {
   display: none;
-
+  
   .post-btn{
     width: 35px;
     height: 35px !important;
   }
+}
 }
 
 @media (max-width: 959px) {

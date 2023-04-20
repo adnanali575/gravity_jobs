@@ -10,7 +10,7 @@
               <img src="@/assets/icons/experience_icon.svg" />
             </v-avatar>
             <v-sheet width="100%" class="ms-4">
-              <p class="font-weight-black">{{ employee.seniority[0] }}</p>
+              <!-- <p class="font-weight-black">{{ employee.seniority[0] }}</p> -->
               <p>{{ employee.expertInSkill }}</p>
 
               <div class="skill-info">
@@ -88,7 +88,7 @@ const props = defineProps<{
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .small-text {
   font-weight: 400;
   font-size: 14px;

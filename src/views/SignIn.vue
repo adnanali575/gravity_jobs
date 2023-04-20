@@ -17,7 +17,7 @@
               label="Password"
             />
             <BaseButton
-              @action="SignIn"
+              @click="SignIn"
               class="controls mt-6"
               title="Sign in"
               variant="flat"

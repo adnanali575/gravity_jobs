@@ -30,24 +30,12 @@
 import SignInForm from "@/components/SignInForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import router from "@/router/router";
-import { auth } from "@/firebaseInit";
-import { sendPasswordResetEmail } from "@firebase/auth";
+import store from "@/store/store";
 
 let email: string = "";
 
 let resetPassword = () => {
-  sendPasswordResetEmail(auth, email)
-    .then(() => {
-      console.log("Password reset email sent successfully");
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const submit = () => {
-  router.push({ name: "ResetConfirm" });
+  store.dispatch("resetPassword", email);
 };
 </script>
 

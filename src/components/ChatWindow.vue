@@ -17,54 +17,34 @@
     </div>
 
     <div class="chat-section">
-      <v-sheet class="chat-info my-4 d-flex" v-for="i in 1" :key="i">
-        <v-avatar class="profile-avatar me-4">
-          <img
-            src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-          />
-        </v-avatar>
-        <div>
-          <span class="d-flex my-1">
-            <p class="name">Jean Durand</p>
-            <p class="ms-5">12:45</p>
-          </span>
-          <p class="decscription">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.Consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.
-          </p>
-        </div>
-      </v-sheet>
-
-      <v-sheet class="my-2">
+      <v-sheet class="my-2" v-if="false">
         <v-divider></v-divider>
         <div class="date-text d-flex justify-center">
           <p class="px-5 bg-white text-center">11 Jan</p>
         </div>
       </v-sheet>
 
-      <v-sheet class="chat-info my-4 d-flex" v-for="i in 12" :key="i">
+      <v-sheet
+        class="chat-info my-4 d-flex"
+        v-for="(message, index) in messages"
+        :key="index"
+      >
         <v-avatar class="profile-avatar me-4">
-          <img
-            src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-          />
+          <img :src="message.userProfile" />
         </v-avatar>
         <div>
           <span class="d-flex my-1">
-            <p class="name">Jean Durand</p>
-            <p class="ms-5">12:45</p>
+            <p class="name">{{ message.userName }}</p>
+            <p class="ms-5">
+              {{ message.hours.toString().padStart(2, "0") }}:{{
+                message.minutes.toString().padStart(2, "0")
+              }}
+              {{ period(message.hours) }}
+            </p>
           </span>
-          <p class="decscription">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.
+          <p class="desccription">
+            {{ message.text }}
           </p>
-        </div>
-      </v-sheet>
-
-      <v-sheet class="my-2">
-        <v-divider></v-divider>
-        <div class="date-text d-flex justify-center">
-          <p class="px-5 bg-white text-center">12 Jan</p>
         </div>
       </v-sheet>
     </div>
@@ -79,7 +59,13 @@
             @keypress.enter="sendMessage"
           />
         </v-sheet>
-        <v-btn flat icon="mdi-send" @click="sendMessage" class="send-btn" color="primary"></v-btn>
+        <v-btn
+          flat
+          icon="mdi-send"
+          @click="sendMessage"
+          class="send-btn"
+          color="primary"
+        ></v-btn>
       </div>
     </div>
   </div>
@@ -89,15 +75,32 @@
 import BaseInput from "@/components/BaseInput.vue";
 import WriteMessagePopUp from "./WriteMessagePopUp.vue";
 import { ref } from "vue";
+import { onMounted } from "vue";
+import store from "@/store/store";
+import { computed } from "@vue/reactivity";
 
 let messageText = ref("");
+onMounted(() => {
+  // store.dispatch("getMessages", store.state.userId);
+});
 
-const sendMessage = ()=>{
-}
+const sendMessage = () => {
+  store.dispatch("sendMessage", messageText.value);
+  messageText.value = "";
+};
+
+const messages = computed(() => {
+  return store.state.messages;
+});
+
+const period = (hours: number) => {
+  if (hours > 12) return "PM";
+  else return "AM";
+};
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .right {
   overflow: hidden;
   width: 100%;
@@ -131,13 +134,20 @@ const sendMessage = ()=>{
     line-height: 28px;
   }
 
-  .decscription {
+  .desccription {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 10px 6px);
     font-weight: 400;
     font-size: 14px;
+    display: inline;
+    min-width: 100px;
     line-height: 24px;
-    background-color: $background;
-    padding: 10px;
-    border-radius: 15px;
+    // background-color: #e9e9e9;
+    background-color: $primary;
+    color: $white;
+    padding: 7px 10px 7px 20px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 
   .profile-avatar img {

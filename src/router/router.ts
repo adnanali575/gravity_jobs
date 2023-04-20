@@ -17,18 +17,19 @@ import SignUp from "@/views/SignUp.vue";
 import Account from "@/views/Account.vue";
 import Post from "@/views/post.vue";
 
-import Test from "@/views/test.vue";
-
 import SideBar from "@/components/SideBar.vue";
 import SearchHeader from "@/components/SearchHeader.vue";
 import ShortListHeader from "@/components/ShortlistHeader.vue";
 import CustomHeader from "@/components/CustomHeader.vue";
 import BottomNavBar from "@/components/BottomBar.vue";
+import ChatWindow from "@/components/ChatWindow.vue";
+import { ref } from "vue";
+import store from "@/store/store";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: "/test", name: "test", component: Test },
     {
       path: "/",
       name: "Introduction",
@@ -46,7 +47,17 @@ const router = createRouter({
         BottomNavBar: BottomNavBar,
       },
     },
-    { path: "/search/:id", name: "profile", component: Profile },
+    {
+      path: "/search/:id",
+      name: "profile",
+      meta: { auth: true },
+      components: {
+        default: Profile,
+        SideBar: SideBar,
+        header: SearchHeader,
+        BottomNavBar: BottomNavBar,
+      },
+    },
     {
       path: "/shortlist",
       name: "shortlist",
@@ -74,6 +85,7 @@ const router = createRouter({
         header: CustomHeader,
         BottomNavBar: BottomNavBar,
       },
+      children: [{ path: "chat/:id", component: ChatWindow }],
     },
     {
       path: "/profile",
@@ -89,11 +101,13 @@ const router = createRouter({
     {
       path: "/forgot-password",
       name: "ForgotPassword",
+      meta: { auth: false },
       component: ForgotPassword,
     },
     {
       path: "/reset-password",
       name: "ResetPassword",
+      meta: { auth: false },
       component: ResetPassword,
     },
     {
@@ -108,7 +122,12 @@ const router = createRouter({
       component: SignUp,
       meta: { auth: false },
     },
-    { path: "/reset-confirm", name: "ResetConfirm", component: ResetConfirm },
+    {
+      path: "/reset-confirm",
+      name: "ResetConfirm",
+      meta: { auth: false },
+      component: ResetConfirm,
+    },
     {
       path: "/account-settings",
       name: "AccountSettings",
@@ -134,27 +153,25 @@ const router = createRouter({
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   const auth = getAuth();
-//   const requiresAuth = to.matched.some(record => record.meta.auth);
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.auth);
+  const auth = getAuth();
+  const user = await new Promise((resolve) => {
+    onAuthStateChanged(auth, resolve);
+  });
+  const isAuthenticated = !!user;
 
-//   // If the route requires authentication
-//   if (requiresAuth) {
-//     // Check if the user is authenticated
-//     if (auth.currentUser) {
-//       next();
-//     } else {
-//       // Redirect the user to the login page
-//       next('/sign-in');
-//     }
-//   } else {
-//     // If the user is authenticated and trying to access the sign-in page, redirect to the root page
-//     if (to.name === 'SignIn' && auth.currentUser) {
-//       next('/');
-//     } else {
-//       next();
-//     }
-//   }
-// });
+  if (requiresAuth && !isAuthenticated) {
+    next("/sign-in");
+  } else if (isAuthenticated && to.name === "SignIn") {
+    next("/");
+  } else if (isAuthenticated && requiresAuth) {
+    next();
+  } else if (!isAuthenticated && requiresAuth) {
+    next("/sign-in");
+  } else {
+    next();
+  }
+});
 
 export default router;

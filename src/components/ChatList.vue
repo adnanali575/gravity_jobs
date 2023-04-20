@@ -2,41 +2,39 @@
   <div class="left" id="list">
     <div class="search-bar-menu bg-white">
       <div class="search-field d-flex align-center justify-space-between">
-        <span class="text-field-box">
-          <v-text-field
-            class="bg-input-background rounded-pill"
-            variant="outlined"
-            placeholder="Search inbox"
-            append-inner-icon="mdi-magnify"
-            @click:append-inner="OnClick"
-          ></v-text-field>
+        <span class="text-field-box d-flex align-center">
+          <v-btn icon="" class="search-btn bg-input-background" flat>
+            <img src="@/assets/icons/search_black.svg" alt="" />
+          </v-btn>
+          <BaseInput
+            class="ps-14"
+            v-model="searchText"
+            placeholder="Search Inbox"
+          />
         </span>
         <slot name="close-list"></slot>
       </div>
     </div>
 
-    <v-divider class="divider"></v-divider>
-
     <div class="list">
-      <v-list>
-        <div v-for="(i, index) in 20" :key="index">
-          <v-list-item @click="" class="chat-item" :value="i">
+      <v-divider class="divider"></v-divider>
+      <v-list class="py-0">
+        <div v-for="(user, index) in usersDetails" :key="index">
+          <v-list-item @click="openChat" class="chat-item" :value="user.userId">
             <v-sheet class="py-2 d-flex">
               <v-avatar class="profile-avatar me-4">
-                <img
-                  src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-                />
+                <img :src="user.userProfile" />
               </v-avatar>
 
               <div class="inner-content">
                 <div class="d-flex justify-space-between">
-                  <b class="heading">Jean Besson-Perrier</b>
+                  <b class="heading"
+                    >{{ user.firstName }} {{ user.lastName }}</b
+                  >
                   <p>12:45</p>
                 </div>
                 <div class="text d-flex align-center">
-                  <p>
-                    Hello Jean Besson-Perrier, I’m looking for a CTO...
-                  </p>
+                  <p>{{ user.lastMessage }}</p>
                   <v-badge
                     v-if="false"
                     class="me-1"
@@ -55,22 +53,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import BaseInput from "./BaseInput.vue";
+import store from "@/store/store";
+import { computed, onMounted, ref } from "vue";
 
 let searchText = ref<string>("");
 
-let OnClick = () => {};
+onMounted(() => {
+  store.dispatch("getUsersDetails");
+});
+
+let usersDetails = computed(() => {
+  return store.state.usersDetails;
+});
+
+const openChat = () => {
+  store.dispatch("getMessages", store.state.currentUserDetails.userId);
+};
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/_variables';
+@import "@/scss/_variables";
 
 .left {
   width: 500px;
   display: grid;
   grid-template-rows: 80px 1fr;
 
-  .divider{
+  .divider {
     opacity: 1;
     color: $divider-color;
   }
@@ -79,6 +89,10 @@ let OnClick = () => {};
 .search-bar-menu {
   padding: 0px 20px;
   width: 100%;
+
+  .search-btn {
+    margin-right: -52px;
+  }
 }
 
 .list {
@@ -121,6 +135,11 @@ let OnClick = () => {};
 .profile-avatar {
   width: 64px;
   height: 64px;
+
+  img{
+    width: 100%;
+    height: auto;
+  }
 }
 
 .profile-avatar img {

@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <v-layout class="layout">
+    <div class="body-pre-loader" v-if="store.state.bodyPreLoader">
+      <img
+        src="https://i.gifer.com/origin/d5/d51bd118fe85a5e16b2d3c2adac6b4cc.gif"
+      />
+    </div>
+    <v-layout class="layout" v-else>
       <router-view name="SideBar"></router-view>
       <router-view
         :headerTitle="headerTitle"
@@ -8,9 +13,8 @@
         name="header"
       ></router-view>
 
-      <v-main class="main-container">
+      <v-main class="main-container py-0">
         <router-view class="main-view"></router-view>
-        <router-view name="FloatinMessage"></router-view>
       </v-main>
 
       <router-view name="BottomNavBar"></router-view>
@@ -23,6 +27,7 @@ import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import store from "./store/store";
+import { onMounted } from "vue";
 
 const route = useRoute();
 const headerTitle = computed(() => {
@@ -31,18 +36,18 @@ const headerTitle = computed(() => {
   if (route.name === "Post") return "Post Job";
 });
 
-const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    store.dispatch('setCurrentUserDetails', user.uid)
-    console.log('Signed In')
-    // ...
-  } else {
-    console.log('Logged Out')
-  }
-  
+onMounted(() => {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log(user.email, user.uid);
+      store.dispatch("setCurrentUserDetails", user.uid);
+      // console.log("Signed In");
+    } else {
+      console.log("Logged Out");
+    }
+  });
 });
-
 </script>
 
 <style>
@@ -66,14 +71,22 @@ onAuthStateChanged(auth, (user) => {
 }
 
 .main-container {
-  padding-bottom: 0px !important;
-  padding-top: 0px !important;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 .main-view {
   animation: animate 0.3s linear;
+}
+
+.body-pre-loader {
+  width: 100vw;
+  height: 100vh;
+  background-color: #001e31;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
 }
 
 @keyframes animate {

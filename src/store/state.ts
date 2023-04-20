@@ -1,4 +1,4 @@
-import type { employeesInfoTypes, jobPostingObject } from "@/types";
+import type { employeesInfoTypes, Messages, UserDetails } from "@/types";
 import { ref } from "vue";
 
 const state = {
@@ -8,9 +8,11 @@ const state = {
   interviewingEmployees: Array<employeesInfoTypes>(),
   hiredEmployees: Array<employeesInfoTypes>(),
   employeeInfo: {} as employeesInfoTypes,
-  userId: ref<string>(""),
-
-  logInLogOutAlert: ref(false),
+  currentUserDetails: {} as UserDetails,
+  usersDetails: Array<UserDetails>(),
+  userId: ref(""),
+  messages: Array<Messages>(),
+  bodyPreLoader: false,
 };
 
 export default state;

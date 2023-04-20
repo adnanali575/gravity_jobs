@@ -4,7 +4,7 @@
       <div class="py-6 d-flex justify-end">
         <v-btn
           v-if="formStatus"
-          variantant="text"
+          variant="text"
           color="primary"
           @click="enableform"
           >Edit</v-btn
@@ -37,18 +37,14 @@
 <script setup lang="ts">
 import SignUpForm from "@/components/SignUpForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import type { signUpObject } from "@/types";
 import { ref } from "vue";
+import store from "@/store/store";
+import { computed } from "@vue/reactivity";
 
-let defaltUserDetails = {
-  firstName: "Adnan",
-  lastName: "Ali",
-  companyName: "Pine Technologies",
-  role: "Frontend Developer",
-  noOfRecrutement: "Not Yet!",
-  email: "test@gmail.com",
-  phone: "03109178235",
-  password: "test@123",
-};
+let defaltUserDetails = computed(() => {
+  return store.state.currentUserDetails;
+});
 
 let formStatus = ref<boolean>(true);
 
@@ -60,8 +56,8 @@ const disableform = () => {
   formStatus.value = true;
 };
 
-let update = (userDetails: any) => {
-  // console.log(userDetails)
+let update = (userDetails: signUpObject) => {
+  store.dispatch("updateProfile", userDetails);
 };
 </script>
 

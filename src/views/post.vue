@@ -99,8 +99,9 @@
 <script setup lang="ts">
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import store from "@/store/store";
 import SelectDropDown from "@/components/SelectDropDown.vue";
+
+import store from "@/store/store";
 import { ref } from "vue";
 
 let stacksList = ref<string[]>(["Vue js", "React", "Angular", "jQuery"]);
@@ -115,9 +116,9 @@ let seniorityList = ref<string[]>(["Junior", "Senior", "Lead", "CTO"]);
 let firstName = ref("");
 let lastName = ref("");
 let email = ref("");
-let location = ref<string>();
+let location = ref<string[]>([]);
 let imageUrl = ref<string>(
-  "https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
+  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
 );
 let stacks = ref<string[]>([]);
 let seniority = ref<string[]>([]);
@@ -141,16 +142,15 @@ const setSeniority = (stacksArray: Array<string>) => {
 };
 
 const postJob = () => {
-  console.log(seniority.value);
+  const date = new Date();
 
   store.dispatch("postJob", {
     firstName: firstName.value,
     lastName: lastName.value,
     email: email.value,
-    location: location.value,
-    stacks: stacks.value,
-    seniority: seniority.value,
-    status: "",
+    location: "Pakistan",
+    stacks: ["Vue js", "React"],
+    seniority: ["Lead"],
     imageurl: imageUrl.value,
     expertInSkill: expertInSkill.value,
     skillStartingYear: skillStartingYear.value,
@@ -159,6 +159,7 @@ const postJob = () => {
     passingYear: passingYear.value,
     educatedFrom: educatedFrom.value,
     userId: store.state.userId,
+    date: date,
   });
 };
 </script>

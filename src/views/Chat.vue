@@ -4,11 +4,11 @@
       <template #close-list>
         <div>
           <v-btn
-          icon="mdi-format-list-checks"
-          class="toggle-btn mx-3"
-          flat
-          @click="toggleList"
-        ></v-btn>
+            icon="mdi-format-list-checks"
+            class="toggle-btn mx-3"
+            flat
+            @click="toggleList"
+          ></v-btn>
         </div>
       </template>
     </ChatList>
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import ChatList from "@/components/ChatList.vue";
-import ChatWindow from "@/components/ChatWindow.vue";
+import ChatWindow from "@/components/ChatWindow.vue"; 
 import { ref } from "vue";
 
 let list = ref(false);

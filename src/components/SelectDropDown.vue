@@ -1,18 +1,11 @@
 <template>
-  <v-select
-    :label="label"
-    :items="dropDownItems"
-    :multiple="multiple"
-    v-model="modelValue"
-  >
+  <v-select :label="label" :items="dropDownItems" :multiple="multiple">
     <template v-slot:append-item>
       <div v-if="multiple">
         <v-divider class="mb-2"></v-divider>
 
         <v-list-item>
-          <div class="d-flex justify-space-between">
-            <slot name="controls" v-bind="modelValue"></slot>
-          </div>
+          <slot name="controls"></slot>
         </v-list-item>
       </div>
     </template>
@@ -20,15 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
 const props = defineProps<{
   dropDownItems: Array<string>;
   label: string;
   multiple: boolean;
 }>();
-
-let modelValue = ref<string[]>([]);
 </script>
 
 <style lang="scss">

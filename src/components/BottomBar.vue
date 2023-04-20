@@ -25,25 +25,7 @@
             </v-btn>
           </template>
 
-          <v-list width="245px" density="compact">
-            <v-list-item
-              value="settings"
-              title="Settings"
-              prepend-icon="mdi-format-list-checks"
-              active-color="primary"
-              router
-              to="/account-settings"
-            >
-            </v-list-item>
-            <v-list-item
-              @click="signOut"
-              value="logout"
-              title="Log out"
-              prepend-icon="mdi-export"
-              active-color="primary"
-            >
-            </v-list-item>
-          </v-list>
+          <AccountControl />
         </v-menu>
       </div>
     </v-app-bar>
@@ -52,6 +34,7 @@
 
 <script setup lang="ts">
 import notification from "./Notification.vue";
+import AccountControl from "./AccountControl.vue";
 
 const signOut = () => {};
 </script>

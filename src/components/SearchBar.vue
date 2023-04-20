@@ -3,51 +3,42 @@
     <div id="search-bar" class="search-bar">
       <slot name="heading"></slot>
       <div class="inputs-box">
-        <v-row no-gutters>
-          <v-col cols="12" md="4">
+        <VRow no-gutters>
+          <VCol cols="12" md="4">
             <SelectDropDown
               label="Stacks Used"
               :multiple="true"
               :dropDownItems="stacksList"
             >
-              <template #controls="stacks">
-                <v-btn @click="clear" rounded variant="text" color="primary"
-                  >Clear</v-btn
-                >
-                <v-btn @click="save(stacks)" rounded flat color="primary"
-                  >Save</v-btn
-                >
+              <template #controls>
+                <BaseButton title="Clear" variant="text" />
               </template>
             </SelectDropDown>
-          </v-col>
+          </VCol>
 
-          <v-divider vertical></v-divider>
+          <VDivider vertical></VDivider>
 
-          <v-col cols="12" md="4">
+          <VCol cols="12" md="4">
             <SelectDropDown
               label="Location"
               :multiple="false"
               :dropDownItems="locationsList"
             />
-          </v-col>
+          </VCol>
 
-          <v-divider vertical></v-divider>
-          <v-col cols="12" md="4">
+          <VDivider vertical></VDivider>
+          <VCol cols="12" md="4">
             <SelectDropDown
-              v-model="seniority"
               label="Seniority"
               :multiple="true"
               :dropDownItems="seniorityList"
             >
-              <template #controls>
-                <v-btn @click="clear" rounded variant="text" color="primary"
-                  >Clear</v-btn
-                >
-                <v-btn @click="save" rounded flat color="primary">Save</v-btn>
+              <template #controls="test">
+                <BaseButton title="Clear" variant="text" />
               </template>
             </SelectDropDown>
-          </v-col>
-        </v-row>
+          </VCol>
+        </VRow>
       </div>
 
       <v-btn class="bg-primary mx-1" @click="search" flat icon="">
@@ -61,7 +52,8 @@
 <script setup lang="ts">
 import store from "@/store/store";
 import SelectDropDown from "./SelectDropDown.vue";
-import { computed, ref } from "@vue/reactivity";
+import BaseButton from "./BaseButton.vue";
+import { ref } from "vue";
 
 let stacksList = ref<string[]>(["Vue js", "React", "Angular", "jQuery"]);
 let locationsList = ref<string[]>([
@@ -72,29 +64,19 @@ let locationsList = ref<string[]>([
 ]);
 let seniorityList = ref<string[]>(["Junior", "Senior", "Lead", "CTO"]);
 
-let stacks = Array<string>();
+let stacks = ref([]);
 let location = ref([]);
 let seniority = ref([]);
 
-// For later use ....
-// console.log('First ----- ', JSON.parse(JSON.stringify(controls.value)))
-
-const save = (selectedStacks: Array<string>) => {
-  stacks = selectedStacks;
-};
 const clear = () => {};
 
 const search = () => {
-  if(stacks != Array<string>()){
-    console.log(stacks);
-  }
-  else{
-    alert("Please Save the value first")
-  }
-  // console.log(JSON.parse(JSON.stringify(stacks.value)));
+  store.dispatch("getData", {
+    stacks: ["Vue js", "Angular"],
+    location: "United States",
+    seniority: ["CTO"],
+  });
 };
-
-// store.dispatch("getData");
 </script>
 
 <style lang="scss">

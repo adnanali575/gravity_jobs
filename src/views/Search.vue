@@ -42,7 +42,6 @@ let employeesInfo = computed(() => {
   return store.state.employeesInfo;
 });
 
-// let employeesInfo = [435, 45, 43 ,34, 56, 45, 34, 34, 98]
 </script>
 
 <style scoped lang="scss">

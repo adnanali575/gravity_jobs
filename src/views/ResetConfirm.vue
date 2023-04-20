@@ -13,6 +13,8 @@
               class="controls my-3"
               title="Resend a validation e-mail"
               variant="flat"
+              router
+              to="/forgot-password"
             />
             <p class="text-center">OR</p>
             <BaseButton
