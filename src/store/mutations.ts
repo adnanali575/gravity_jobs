@@ -1,8 +1,7 @@
-import type { employeesInfoTypes, Messages, State, UserDetails } from "@/types";
+import type { EmployeesInfoTypes, Messages, State, UserDetails } from "@/types";
 
 export default {
-  SetGetData: (state: State, payload: Array<employeesInfoTypes>) => {
-    console.log(payload);
+  SetGetData: (state: State, payload: Array<EmployeesInfoTypes>) => {
     state.employeesInfo = payload;
   },
 
@@ -10,7 +9,7 @@ export default {
     state.usersDetails.push(payload);
   },
 
-  setShowProfile: (state: State, payload: employeesInfoTypes) => {
+  setShowProfile: (state: State, payload: EmployeesInfoTypes) => {
     state.employeeInfo = payload;
   },
 
@@ -19,24 +18,23 @@ export default {
     state.userId = payload.userId;
   },
 
-  SetShortlistEmployees: (state: State, payload: employeesInfoTypes) => {
+  SetShortlistEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.shortListedEmployees.push(payload);
   },
 
-  SetContactedEmployees: (state: State, payload: employeesInfoTypes) => {
+  SetContactedEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.contactedEmployees.push(payload);
   },
 
-  setInterviewingEmployees: (state: State, payload: employeesInfoTypes) => {
+  setInterviewingEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.interviewingEmployees.push(payload);
   },
 
-  setHiredEmployees: (state: State, payload: employeesInfoTypes) => {
+  setHiredEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.hiredEmployees.push(payload);
   },
 
   // Messaging Section ------------------
-
   setMessages: (state: State, payload: Messages) => {
     state.messages.push(payload);
   },

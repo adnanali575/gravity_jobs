@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import SignUpForm from "@/components/SignUpForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import type { signUpObject } from "@/types";
+import type { SignUpObject } from "@/types";
 import { ref } from "vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
@@ -56,7 +56,7 @@ const disableform = () => {
   formStatus.value = true;
 };
 
-let update = (userDetails: signUpObject) => {
+let update = (userDetails: SignUpObject) => {
   store.dispatch("updateProfile", userDetails);
 };
 </script>

@@ -50,7 +50,7 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style lang="scss">
 .introduction,
 .reset-confirm,
 .sign-in,
@@ -87,6 +87,11 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
+
+  img{
+    width: 200px;
+    height: fit-content;
+  }
 }
 
 @keyframes animate {

@@ -38,11 +38,11 @@
 <script setup lang="ts">
 import store from "@/store/store";
 import BaseButton from "./BaseButton.vue";
-import type { employeesInfoTypes } from "@/types";
+import type { EmployeesInfoTypes } from "@/types";
 import { computed } from "vue";
 
 const props = defineProps<{
-  employee: employeesInfoTypes;
+  employee: EmployeesInfoTypes;
 }>();
 
 let shortlisted = computed(() => {

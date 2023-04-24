@@ -34,11 +34,9 @@
         </v-avatar>
         <div>
           <span class="d-flex my-1">
-            <p class="name">{{ message.userName }}</p>
+            <p class="name">{{ userName(message.userName) }}</p>
             <p class="ms-5">
-              {{ message.hours.toString().padStart(2, "0") }}:{{
-                message.minutes.toString().padStart(2, "0")
-              }}
+              {{ hours(message.hours) }}:{{ minutes(message.minutes) }}
               {{ period(message.hours) }}
             </p>
           </span>
@@ -78,20 +76,48 @@ import { ref } from "vue";
 import { onMounted } from "vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
+import { useRoute } from "vue-router";
+const route = useRoute();
 
 let messageText = ref("");
-onMounted(() => {
-  // store.dispatch("getMessages", store.state.userId);
-});
 
 const sendMessage = () => {
-  store.dispatch("sendMessage", messageText.value);
+  store.dispatch("sendMessage", {
+    text: messageText.value,
+    senderId: store.state.currentUserDetails.userId,
+    receiverId: route.params.id,
+    userName: `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`,
+    profile: store.state.currentUserDetails.userProfile,
+  });
   messageText.value = "";
 };
 
 const messages = computed(() => {
-  return store.state.messages;
+  let messages = store.state.messages;
+  messages.sort((a, b) => b.date.getTime() - a.date.getTime());
+  return messages;
 });
+
+const userName = ((userName: string)=>{
+  if(userName == `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`) {
+    return 'You'
+  }
+  else{
+    return userName
+  }
+})
+
+const hours = (hours: number) => {
+  let h: number = hours;
+  if (h > 12) h = hours - 12;
+  if (h < 10) return "0" + h.toString();
+  else return h;
+};
+
+const minutes = (minutes: number) => {
+  if (minutes < 10) return "0" + minutes.toString();
+  else return minutes.toString();
+};
 
 const period = (hours: number) => {
   if (hours > 12) return "PM";
@@ -135,19 +161,19 @@ const period = (hours: number) => {
   }
 
   .desccription {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 10px 6px);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 5px 100%, 5px 6px);
     font-weight: 400;
     font-size: 14px;
-    display: inline;
+    display: inline-block;
     min-width: 100px;
     line-height: 24px;
     // background-color: #e9e9e9;
     background-color: $primary;
     color: $white;
     padding: 7px 10px 7px 20px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
   }
 
   .profile-avatar img {

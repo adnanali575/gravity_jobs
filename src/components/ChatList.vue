@@ -20,7 +20,12 @@
       <v-divider class="divider"></v-divider>
       <v-list class="py-0">
         <div v-for="(user, index) in usersDetails" :key="index">
-          <v-list-item @click="openChat" class="chat-item" :value="user.userId">
+          <v-list-item
+            class="chat-item"
+            :value="user.userId"
+            router
+            :to="'/chat/' + user.userId"
+          >
             <v-sheet class="py-2 d-flex">
               <v-avatar class="profile-avatar me-4">
                 <img :src="user.userProfile" />
@@ -53,9 +58,13 @@
 </template>
 
 <script setup lang="ts">
+import router from "@/router/router";
 import BaseInput from "./BaseInput.vue";
 import store from "@/store/store";
 import { computed, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 let searchText = ref<string>("");
 
@@ -67,9 +76,12 @@ let usersDetails = computed(() => {
   return store.state.usersDetails;
 });
 
-const openChat = () => {
-  store.dispatch("getMessages", store.state.currentUserDetails.userId);
-};
+router.afterEach((to) => {
+  store.dispatch("getMessages", {
+    senderId: store.state.currentUserDetails.userId,
+    receiverId: route.params.id,
+  });
+});
 </script>
 
 <style scoped lang="scss">
@@ -136,7 +148,7 @@ const openChat = () => {
   width: 64px;
   height: 64px;
 
-  img{
+  img {
     width: 100%;
     height: auto;
   }

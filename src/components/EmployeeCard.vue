@@ -77,13 +77,13 @@
 <script setup lang="ts">
 import store from "@/store/store";
 import EmployeeControls from "./EmployeeControls.vue";
-import type { employeesInfoTypes } from "@/types";
+import type { EmployeesInfoTypes } from "@/types";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 const route = useRoute();
 
 const props = defineProps<{
-  employee: employeesInfoTypes;
+  employee: EmployeesInfoTypes;
 }>();
 
 const showProfile = () => {

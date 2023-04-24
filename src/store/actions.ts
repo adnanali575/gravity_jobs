@@ -25,20 +25,21 @@ import type { Commit } from "vuex";
 import type {
   Messages,
   State,
-  signUpObject,
+  SignUpObject,
   UserDetails,
-  jobPostingObject,
-  employeesInfoTypes,
+  JobPostingObject,
+  EmployeesInfoTypes,
 } from "@/types";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import store from "./store";
+import { ref } from "vue";
 
 export default {
   // Sign up ------------------------
-  signUp: ({}, payload: signUpObject) => {
+  signUp: ({}, payload: SignUpObject) => {
     console.log(payload);
     createUserWithEmailAndPassword(auth, payload.email, payload.password)
       .then((credential) => {
@@ -53,8 +54,8 @@ export default {
   // Sign in ------------------------
   SignIn: ({}, payload: { email: string; password: string }) => {
     signInWithEmailAndPassword(auth, payload.email, payload.password)
-      .then(async (credential) => {
-        router.push({ name: "Search" });
+      .then((credential) => {
+        router.push("/search");
       })
       .catch((error) => {
         console.log(error.message);
@@ -69,7 +70,7 @@ export default {
         router.push("/sign-in");
       })
       .catch((error) => {
-        alert("Email could not sent");
+        alert("New there may some problems....");
       });
   },
 
@@ -87,7 +88,7 @@ export default {
   },
 
   // Update Profile of Current User -------------------------
-  updateProfile: ({}, payload: signUpObject) => {
+  updateProfile: ({}, payload: SignUpObject) => {
     console.log(payload);
 
     const docRef = db.collection("users").doc(payload.userId);
@@ -113,7 +114,7 @@ export default {
       commit("setCurrentUserDetails", data);
       store.state.bodyPreLoader = false;
 
-      state.shortListedEmployees = Array<employeesInfoTypes>();
+      state.shortListedEmployees = Array<EmployeesInfoTypes>();
 
       data.shortlisted.forEach((e: string) => {
         db.collection("jobs")
@@ -125,7 +126,7 @@ export default {
           });
       });
 
-      state.contactedEmployees = Array<employeesInfoTypes>();
+      state.contactedEmployees = Array<EmployeesInfoTypes>();
       data.contacted.forEach((e: string) => {
         db.collection("jobs")
           .doc(e)
@@ -135,7 +136,7 @@ export default {
             commit("SetContactedEmployees", data);
           });
       });
-      state.interviewingEmployees = Array<employeesInfoTypes>();
+      state.interviewingEmployees = Array<EmployeesInfoTypes>();
 
       data.interviewing.forEach((e: string) => {
         db.collection("jobs")
@@ -147,7 +148,7 @@ export default {
           });
       });
 
-      state.hiredEmployees = Array<employeesInfoTypes>();
+      state.hiredEmployees = Array<EmployeesInfoTypes>();
       data.hired.forEach((e: string) => {
         db.collection("jobs")
           .doc(e)
@@ -169,7 +170,7 @@ export default {
       seniority: Array<string>;
     }
   ) => {
-    let employees = Array<employeesInfoTypes>();
+    let employees = Array<EmployeesInfoTypes>();
 
     try {
       let docRef = db.collection("jobs");
@@ -180,7 +181,7 @@ export default {
 
       snapshot1.forEach((doc) => {
         let data = { ...doc.data(), docId: doc.id };
-        employees.push(data as employeesInfoTypes);
+        employees.push(data as EmployeesInfoTypes);
       });
 
       const snapshot2 = await docRef
@@ -189,7 +190,7 @@ export default {
 
       snapshot2.forEach((doc) => {
         let data = { ...doc.data(), docId: doc.id };
-        employees.push(data as employeesInfoTypes);
+        employees.push(data as EmployeesInfoTypes);
       });
 
       const snapshot3 = await docRef
@@ -198,11 +199,11 @@ export default {
 
       snapshot3.forEach((doc) => {
         let data = { ...doc.data(), docId: doc.id };
-        employees.push(data as employeesInfoTypes);
+        employees.push(data as EmployeesInfoTypes);
       });
 
-      function removeDuplicates(arr: Array<employeesInfoTypes>) {
-        let commonEmployees = Array<employeesInfoTypes>();
+      function removeDuplicates(arr: Array<EmployeesInfoTypes>) {
+        let commonEmployees = Array<EmployeesInfoTypes>();
         let ids = new Set();
 
         for (let obj of arr) {
@@ -294,47 +295,71 @@ export default {
     });
   },
 
-  // Get Message of users ------------------------
-  getMessages: (
+  // Send message to next end user ------------------------
+  sendMessage: (
     { commit, state }: { commit: Commit; state: State },
-    payload: string
+    payload: {
+      text: string;
+      senderId: string;
+      receiverId: string;
+      userName: string;
+      profile: string;
+    }
   ) => {
-    console.log("=>", payload);
-    onSnapshot(
-      query(
-        collection(db, "users/" + "XCwR3m7OdabR6ODfQpHUfCgchYj2" + "/messages"),
-        orderBy("date", "desc")
-      ),
-      (snapshot: any) => {
-        state.messages = Array<Messages>();
-        snapshot.forEach((e: any) => {
+    const date = new Date();
+    
+    addDoc(collection(db, "users/" + payload.receiverId + "/messages"), {
+      text: payload.text,
+      date: date,
+      seen: false,
+      senderId: payload.senderId,
+      receiverId: payload.receiverId,
+      userName: payload.userName,
+      userProfile: payload.profile,
+    }).then(() => {
+      console.log("Your Message Sent Successfully");
+    });
+  },
+
+  // Get Message of users ------------------------
+  getMessages: async (
+    { commit, state }: { commit: Commit; state: State },
+    payload: { senderId: string; receiverId: string }
+  ) => {
+    try {
+      state.messages = Array<Messages>();
+
+      const q1 = query(
+        collection(db, "users/" + payload.receiverId + "/messages"),
+        where("senderId", "==", payload.senderId)
+      );
+      onSnapshot(q1, (querySnapshot) => {
+        querySnapshot.forEach((e) => {
           const data = e.data();
           const timestamp = data.date.toDate();
+          data.date = timestamp;
           data.hours = timestamp.getHours();
           data.minutes = timestamp.getMinutes();
           commit("setMessages", data);
         });
-      }
-    );
-  },
+      });
 
-  sendMessage: ({ state }: { state: State }, payload: string) => {
-    const date = new Date();
-    state.messages = Array<Messages>();
-    addDoc(
-      collection(db, "users/" + "XCwR3m7OdabR6ODfQpHUfCgchYj2" + "/messages"),
-      {
-        text: payload,
-        date: date,
-        seen: false,
-        senderId: "XCwR3m7OdabR6ODfQpHUfCgchYj2",
-        receiverId: "XCwR3m7OdabR6ODfQpHUfCgchYj2",
-        userName: "Waseem Akram",
-        userProfile:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmrRJhr_dsfrKGahCBCz2tNhmPWUpu7qs9bg&usqp=CAU",
-      }
-    ).then(() => {
-      console.log("Your Message Sent With ID: ", payload);
-    });
+      const q2 = query(
+        collection(db, "users/" + payload.senderId + "/messages"),
+        where("senderId", "==", payload.receiverId)
+      );
+      onSnapshot(q2, (querySnapshot) => {
+        querySnapshot.forEach((e) => {
+          const data = e.data();
+          const timestamp = data.date.toDate();
+          data.date = timestamp;
+          data.hours = timestamp.getHours();
+          data.minutes = timestamp.getMinutes();
+          commit("setMessages", data);
+        });
+      });
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
   },
 };

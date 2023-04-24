@@ -1,10 +1,9 @@
 export type State = {
-  state: employeesInfoTypes;
-  employeesInfo: Array<employeesInfoTypes>;
-  shortListedEmployees: Array<employeesInfoTypes>;
-  contactedEmployees: Array<employeesInfoTypes>;
-  interviewingEmployees: Array<employeesInfoTypes>;
-  hiredEmployees: Array<employeesInfoTypes>;
+  employeesInfo: Array<EmployeesInfoTypes>;
+  shortListedEmployees: Array<EmployeesInfoTypes>;
+  contactedEmployees: Array<EmployeesInfoTypes>;
+  interviewingEmployees: Array<EmployeesInfoTypes>;
+  hiredEmployees: Array<EmployeesInfoTypes>;
   employeeInfo: object;
   currentUserDetails: object;
   usersDetails: Array<UserDetails>;
@@ -13,7 +12,7 @@ export type State = {
   logInLogOutAlert: boolean;
 };
 
-export type signUpObject = {
+export type SignUpObject = {
   firstName: string;
   lastName: string;
   companyName: string;
@@ -47,7 +46,7 @@ export type UserDetails = {
   hired: Array<string>;
 };
 
-export type jobPostingObject = {
+export type JobPostingObject = {
   firstName: string;
   lastName: string;
   email: string;
@@ -64,7 +63,7 @@ export type jobPostingObject = {
   date: Date;
 };
 
-export type employeesInfoTypes = {
+export type EmployeesInfoTypes = {
   educatedFrom: string;
   email: string;
   experienceInSkillFrom: string;

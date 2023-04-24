@@ -13,16 +13,7 @@
       </template>
     </ChatList>
     <v-divider vertical></v-divider>
-    <ChatWindow>
-      <template #show-list>
-        <v-btn
-          icon="mdi-format-list-checks"
-          class="toggle-btn mx-3"
-          flat
-          @click="toggleList"
-        ></v-btn>
-      </template>
-    </ChatWindow>
+    <router-view/>
   </div>
 </template>
 

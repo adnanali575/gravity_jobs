@@ -80,10 +80,10 @@
 </template>
 
 <script setup lang="ts">
-import type { employeesInfoTypes } from "@/types";
+import type { EmployeesInfoTypes } from "@/types";
 
 const props = defineProps<{
-  employee: employeesInfoTypes;
+  employee: EmployeesInfoTypes;
 }>();
 </script>
 

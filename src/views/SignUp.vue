@@ -39,12 +39,11 @@ import SignUpForm from "@/components/SignUpForm.vue";
 import SignInForm from "@/components/SignInForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import store from "@/store/store";
-import type { signUpObject } from "@/types";
+import type { SignUpObject } from "@/types";
 
-let signUp = (userDetails: signUpObject) => {
+let signUp = (userDetails: SignUpObject) => {
   store.dispatch("signUp", userDetails);
 };
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

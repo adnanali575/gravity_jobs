@@ -73,7 +73,7 @@ const clear = () => {};
 const search = () => {
   store.dispatch("getData", {
     stacks: ["Vue js", "Angular"],
-    location: "United States",
+    location: "Pakistan",
     seniority: ["CTO"],
   });
 };

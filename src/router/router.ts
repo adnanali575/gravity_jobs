@@ -85,7 +85,7 @@ const router = createRouter({
         header: CustomHeader,
         BottomNavBar: BottomNavBar,
       },
-      children: [{ path: "chat/:id", component: ChatWindow }],
+      children: [{ path: ":id", component: ChatWindow }],
     },
     {
       path: "/profile",
