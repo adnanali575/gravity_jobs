@@ -20,12 +20,15 @@
                 title="Cancel"
                 variant="outlined"
               />
-              <BaseButton
+              <div>
+                <BaseButton
+                :loader="buttonLoader"
                 @click="update(userDetails)"
                 class="btn"
                 title="Update"
                 variant="flat"
               />
+              </div>
             </div>
           </template>
         </SignUpForm>
@@ -56,8 +59,23 @@ const disableform = () => {
   formStatus.value = true;
 };
 
-let update = (userDetails: SignUpObject) => {
-  store.dispatch("updateProfile", userDetails);
+const buttonLoader = computed(() => {
+  return store.state.accountUpdateLoader;
+});
+
+let update = (user: SignUpObject) => {
+  if (
+    user.firstName &&
+    user.lastName &&
+    user.companyName &&
+    user.role &&
+    user.noOfRecrutement &&
+    user.email &&
+    user.phone &&
+    user.password
+  ) {
+    store.dispatch("updateProfile", user);
+  }
 };
 </script>
 

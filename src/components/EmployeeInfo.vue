@@ -1,31 +1,31 @@
 <template>
   <div>
     <v-card flat class="card pa-6 mt-4 mt-md-0">
-      <p class="font-weight-black mb-4">Experiences</p>
+      <p class="font-weight-black">Experiences</p>
 
       <v-list>
         <v-list-item>
-          <div class="d-flex pa-0 pa-md-4">
+          <div class="d-flex px-4 pb-4">
             <v-avatar>
               <img src="@/assets/icons/experience_icon.svg" />
             </v-avatar>
             <v-sheet width="100%" class="ms-4">
-              <!-- <p class="font-weight-black">{{ employee.seniority[0] }}</p> -->
+              <p class="font-weight-black">{{ employee.experienceTitle }}</p>
               <p>{{ employee.expertInSkill }}</p>
 
               <div class="skill-info">
                 <span class="d-flex">
-                  <span class="d-flex"
+                  <span class="d-flex align-start"
                     ><img
                       class="mr-2"
                       src="@/assets/icons/small_calender_icon.svg"
                     />
                     <p class="small-text">
-                      {{ employee.skillStartingYear }} - Today . 4 years
+                     {{ employee.skillStartingMonth }}. {{ employee.skillStartingYear }} - Today . {{ currentYear(employee.skillStartingYear) }} years
                     </p>
                   </span>
                 </span>
-                <span class="location d-flex">
+                <span class="location d-flex align-start">
                   <img
                     class="mr-2"
                     src="@/assets/icons/small_location_icon.svg"
@@ -39,11 +39,11 @@
         </v-list-item>
       </v-list>
 
-      <p class="font-weight-black my-4">Education</p>
+      <p class="font-weight-black">Education</p>
 
       <v-list>
         <v-list-item>
-          <div class="d-flex pa-4">
+          <div class="d-flex px-4 pb-4">
             <v-avatar>
               <img src="@/assets/images/education_profile logo.png" />
             </v-avatar>
@@ -55,14 +55,14 @@
               <p>Protecter & Gamble . Full time</p>
 
               <div class="skill-info">
-                <span class="d-flex"
+                <span class="d-flex align-start"
                   ><img
                     class="mr-2"
                     src="@/assets/icons/small_calender_icon.svg"
                   />
-                  <p>{{ employee.passingYear }} - Today . 4 years</p>
+                  <p>{{ employee.passingMonth }}. {{ employee.passingYear }} - Today . {{ currentYear(employee.passingYear) }} years</p>
                 </span>
-                <span class="location d-flex"
+                <span class="location d-flex align-start"
                   ><img
                     class="mr-2"
                     src="@/assets/icons/small_location_icon.svg"
@@ -85,6 +85,10 @@ import type { EmployeesInfoTypes } from "@/types";
 const props = defineProps<{
   employee: EmployeesInfoTypes;
 }>();
+
+const currentYear = (year:any)=>{
+  return new Date().getFullYear() - year;
+}
 </script>
 
 <style scoped lang="scss">

@@ -3,12 +3,14 @@
     <v-navigation-drawer class="bg-background-menu">
       <v-layout full-height class="d-flex flex-column justify-space-between">
         <div class="top-menu">
-          <span class="logo-img">
-            <img class="my-10 mx-auto" src="../assets/icons/logo2.svg" />
-          </span>
+          <router-link to="/">
+            <span class="logo-img">
+              <img class="my-7 mx-auto" src="../assets/icons/logo2.svg" />
+            </span>
+          </router-link>
 
           <v-btn class="navigation-btn" variant="text" router to="/search">
-            <img src="@/assets/icons/Search.svg" />
+            <img src="@/assets/icons/search_white.svg" />
             Search
           </v-btn>
           <v-btn class="navigation-btn" variant="text" router to="/shortlist">
@@ -19,20 +21,20 @@
             <img src="@/assets/icons/messenger_1.svg" />
             Chat
           </v-btn>
+          <v-btn class="navigation-btn" variant="text" router to="/post-job">
+            <v-icon class="post-icon"
+              >mdi-clipboard-check-multiple-outline</v-icon
+            >
+            Apply Now
+          </v-btn>
         </div>
-
-        <PostBtn variant="outlined" class="post-btn" />
 
         <div class="bottom-menu gb-red pa-3">
           <span>
             <PricingPopup />
           </span>
-          <router-link class="text-white text-decoration-none" to="/search">
-            <p class="text-body-2 my-5">Terms & conditions</p>
-          </router-link>
-          <router-link class="text-white text-decoration-none" to="/search">
-            <p class="text-body-2 my-5">Policy privacy</p>
-          </router-link>
+          <p class="text-body-2 my-5">Terms & conditions</p>
+          <p class="text-body-2 my-5">Policy privacy</p>
           <p class="text-body-2 my-5 text-label-placeholder">
             © Gravity 2021, All rights reserved.
           </p>
@@ -44,7 +46,6 @@
 
 <script setup lang="ts">
 import PricingPopup from "./PricingPopup.vue";
-import PostBtn from "./PostBtn.vue";
 </script>
 
 <style scoped lang="scss">
@@ -63,6 +64,11 @@ import PostBtn from "./PostBtn.vue";
 
   img {
     margin: 0px 10px;
+    width: 24px;
+  }
+  .post-icon {
+    margin: 0px 10px;
+    font-size: 24px;
   }
 }
 

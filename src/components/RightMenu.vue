@@ -2,8 +2,8 @@
   <div class="header-right-menu pa-3">
     <notification />
     <v-sheet class="d-flex align-center">
-      <v-divider vertical class="me-2" thickness="2px"></v-divider>
-      <b style="width: 100px">Jean Durand</b>
+      <v-divider vertical class="mx-4" thickness="2px"></v-divider>
+      <b>{{ currentUserName }}</b>
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn
@@ -22,6 +22,12 @@
 <script setup lang="ts">
 import notification from "./Notification.vue";
 import AccountControl from "./AccountControl.vue";
+import { computed } from "vue";
+import store from "@/store/store";
+
+const currentUserName = computed(()=>{
+  return `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`
+})
 </script>
 
 <style scoped lang="scss">
@@ -30,7 +36,7 @@ import AccountControl from "./AccountControl.vue";
   align-items: center;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1100px) {
   .header-right-menu {
     display: none;
   }

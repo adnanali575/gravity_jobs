@@ -1,9 +1,7 @@
 <template>
   <v-app>
     <div class="body-pre-loader" v-if="store.state.bodyPreLoader">
-      <img
-        src="https://i.gifer.com/origin/d5/d51bd118fe85a5e16b2d3c2adac6b4cc.gif"
-      />
+      <PreLoader />
     </div>
     <v-layout class="layout" v-else>
       <router-view name="SideBar"></router-view>
@@ -23,11 +21,14 @@
 </template>
 
 <script setup lang="ts">
+import PreLoader from "@/components/PreLoader.vue";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import store from "./store/store";
 import { onMounted } from "vue";
+import { onSnapshot, doc } from "firebase/firestore";
+import db from "./firebaseInit";
 
 const route = useRoute();
 const headerTitle = computed(() => {
@@ -40,9 +41,22 @@ onMounted(() => {
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log(user.email, user.uid);
-      store.dispatch("setCurrentUserDetails", user.uid);
-      // console.log("Signed In");
+      store.state.bodyPreLoader = true;
+      try {
+        onSnapshot(doc(db, "users", user.uid), (doc: any) => {
+          let data = { ...doc.data(), userId: user.uid };
+          console.log(user.email, user.uid);
+          store.commit("setCurrentUserDetails", data);
+          store.state.bodyPreLoader = false;
+
+          store.dispatch("getShortlistedEmployees");
+          store.dispatch("getContactedEmployees");
+          store.dispatch("getInterviewingEmployees");
+          store.dispatch("getHiredEmployees");
+        });
+      } catch (error) {
+        store.state.bodyPreLoader = false;
+      }
     } else {
       console.log("Logged Out");
     }
@@ -82,16 +96,11 @@ onMounted(() => {
 .body-pre-loader {
   width: 100vw;
   height: 100vh;
-  background-color: #001e31;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
-
-  img{
-    width: 200px;
-    height: fit-content;
-  }
 }
 
 @keyframes animate {

@@ -1,11 +1,11 @@
 <template>
   <v-menu>
     <template v-slot:activator="{ props }">
-      <v-list-item color="white" height="" v-bind="props" value="notifications">
+      <v-list color="white" height="" v-bind="props" value="notifications">
         <v-badge class="pe-1 pt-1" color="purple" dot>
           <img class="bell-icon" src="@/assets/icons/notification_icon.svg" />
         </v-badge>
-      </v-list-item>
+      </v-list>
     </template>
 
     <v-list width="200px">
@@ -20,5 +20,6 @@
 <style>
 .bell-icon {
   width: 24px;
+  cursor: pointer;
 }
 </style>

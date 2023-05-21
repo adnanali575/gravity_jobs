@@ -1,5 +1,4 @@
 <template>
-  <div class="base-input-box">
     <v-text-field
       density="comfortable"
       class="text-field bg-input-background"
@@ -10,34 +9,18 @@
       @input="$emit('update:modelValue', $event.target.value)"
       required
     ></v-text-field>
-    <p v-if="empty || check" class="field-empty ml-6">
-      {{ label }} can't be empty
-    </p>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
   placeholder?: string;
   type?: string;
   label?: string;
-  empty?: boolean;
   modelValue: string;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
-
-let check = ref(false);
-
-watch(
-  () => props.modelValue,
-  (id) => {
-    if (id) check.value = false;
-    else check.value = true;
-  }
-);
 </script>
 
 <style scoped lang="scss">
@@ -45,8 +28,6 @@ watch(
 
 .base-input-box {
   width: 100%;
-  height: 48px;
-  overflow: unset;
 }
 
 .text-field {
@@ -64,6 +45,7 @@ watch(
   animation: error 0.3s linear;
   font-size: 13px;
   line-height: 15px;
+  // position: absolute;
 }
 
 @keyframes error {

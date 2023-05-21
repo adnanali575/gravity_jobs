@@ -1,8 +1,14 @@
-import type { EmployeesInfoTypes, Messages, State, UserDetails } from "@/types";
+import type {
+  ChatUser,
+  EmployeesInfoTypes,
+  Messages,
+  State,
+  UserDetails,
+} from "@/types";
 
 export default {
-  SetGetData: (state: State, payload: Array<EmployeesInfoTypes>) => {
-    state.employeesInfo = payload;
+  setCandidatesData: (state: State, payload: EmployeesInfoTypes) => {
+    state.employeesInfo.push(payload);
   },
 
   setUsersDetails: (state: State, payload: UserDetails) => {
@@ -15,7 +21,6 @@ export default {
 
   setCurrentUserDetails: (state: State, payload: UserDetails) => {
     state.currentUserDetails = payload;
-    state.userId = payload.userId;
   },
 
   SetShortlistEmployees: (state: State, payload: EmployeesInfoTypes) => {
@@ -34,8 +39,18 @@ export default {
     state.hiredEmployees.push(payload);
   },
 
+  setEmployeeToTerminate: (state: State, payload: EmployeesInfoTypes) => {
+    state.employeeToTerminate = payload;
+  },
+
   // Messaging Section ------------------
   setMessages: (state: State, payload: Messages) => {
     state.messages.push(payload);
+  },
+  setChatUsers: (state: State, payload: ChatUser) => {
+    state.chatUsers.push(payload);
+  },
+  setCurrentChatUser: (state: State, payload: ChatUser) => {
+    state.chatUser = payload;
   },
 };
