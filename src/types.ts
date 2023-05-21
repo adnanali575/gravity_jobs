@@ -5,11 +5,27 @@ export type State = {
   interviewingEmployees: Array<EmployeesInfoTypes>;
   hiredEmployees: Array<EmployeesInfoTypes>;
   employeeInfo: object;
-  currentUserDetails: object;
+  currentUserDetails: UserDetails;
   usersDetails: Array<UserDetails>;
-  userId: string;
   messages: Array<Messages>;
-  logInLogOutAlert: boolean;
+  chatUsers: Array<ChatUser>;
+  chatUser: object;
+  employeeToTerminate: object;
+  searchLoader: boolean;
+  success: boolean;
+  error: boolean;
+  shortListLoader: boolean;
+  contactLoader: boolean;
+  interviewLoader: boolean;
+  hireLoader: boolean;
+  chatListLoader: boolean;
+  forgotPasswordLoader: boolean;
+  signInLoader: boolean;
+  signUpLoader: boolean;
+  cardButtonLoader: boolean;
+  profileLoader: boolean;
+  accountUpdateLoader: boolean;
+  formSubmitted: boolean;
 };
 
 export type SignUpObject = {
@@ -21,18 +37,13 @@ export type SignUpObject = {
   email: string;
   phone: string;
   password: string;
-  shortlisted: Array<string>;
-  contacted: Array<string>;
-  interviewing: Array<string>;
-  hired: Array<string>;
   userId: string;
 };
 
 export type UserDetails = {
   firstName: string;
   lastName: string;
-  lastMessage: string;
-  userProfile: string;
+  imageUrl: string;
   companyName: string;
   role: string;
   noOfRecrutement: string;
@@ -40,13 +51,21 @@ export type UserDetails = {
   phone: string;
   password: string;
   userId: string;
-  shortlisted: Array<string>;
-  contacted: Array<string>;
-  interviewing: Array<string>;
-  hired: Array<string>;
+};
+
+export type ChatUser = {
+  userId: string;
+  firstName: string;
+  imageUrl: string;
+  lastMessage: string;
+  lastName: string;
+  hours: number;
+  minutes: number;
 };
 
 export type JobPostingObject = {
+  [x: string]: any;
+  userId: any;
   firstName: string;
   lastName: string;
   email: string;
@@ -55,10 +74,10 @@ export type JobPostingObject = {
   seniority: Array<string>;
   imageUrl: string;
   expertInSkill: string;
-  skillStartingYear: string;
+  skillStartingYear: Date;
   experienceInSkillFrom: string;
   institution: string;
-  passingYear: string;
+  passingYear: Date;
   educatedFrom: string;
   date: Date;
 };
@@ -69,22 +88,27 @@ export type EmployeesInfoTypes = {
   experienceInSkillFrom: string;
   expertInSkill: string;
   firstName: string;
-  imageurl: string;
+  imageUrl: string;
   institution: string;
   lastName: string;
   location: string;
-  passingYear: string;
-  seniority: string[];
-  skillStartingYear: string;
+  passingYear: Date | number;
+  passingMonth: number;
+  experienceTitle: string;
+  seniority: string[] | string;
+  skillStartingYear: Date | number;
+  skillStartingMonth: number;
   stacks: string[];
   status: string;
   docId: string;
+  loading: boolean;
+  confirmTermination: boolean;
   userId: string;
 };
 
 export type Messages = {
   userName: string;
-  userProfile: string;
+  imageUrl: string;
   text: string;
   date: Date;
   senderId: string;

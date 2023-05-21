@@ -4,11 +4,11 @@
       <template #form>
         <p class="instructions">
           Confirmation of your email is required to access your account
-          services. A confirmation request has been sent to you at: xxx@gmail.
+          services. A confirmation request has been sent to you at: test@gmail.
         </p>
         <div class="form-content">
           <v-sheet>
-            <p class="instructions mt-16">You have not received anything?</p>
+            <p class="instructions mt-16">Have you not received anything?</p>
             <BaseButton
               class="controls my-3"
               title="Resend a validation e-mail"

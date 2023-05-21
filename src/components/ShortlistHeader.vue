@@ -20,7 +20,7 @@
           >
             <v-list-item-title
               >{{ item.title }}
-              <v-chip color="primary">{{
+              <v-chip class="chip" size="small" color="primary">{{
                 item.quantity
               }}</v-chip></v-list-item-title
             >
@@ -36,48 +36,56 @@ import RightMenu from "@/components/RightMenu.vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
 
-let shortlisted = computed(()=>{
+let shortlisted = computed(() => {
   return store.state.shortListedEmployees.length;
-})
+});
 
-let contacted = computed(()=>{
+let contacted = computed(() => {
   return store.state.contactedEmployees.length;
-})
+});
 
-let interviewing = computed(()=>{
+let interviewing = computed(() => {
   return store.state.interviewingEmployees.length;
-})
+});
 
-let hired = computed(()=>{
+let hired = computed(() => {
   return store.state.hiredEmployees.length;
-})
+});
 
 let items = [
   { title: "Shortlist", quantity: shortlisted, route: "/shortlist" },
   { title: "Contacted", quantity: contacted, route: "/shortlist/contacted" },
-  { title: "Interviewing", quantity: interviewing, route: "/shortlist/interviewing" },
+  {
+    title: "Interviewing",
+    quantity: interviewing,
+    route: "/shortlist/interviewing",
+  },
   { title: "Hired", quantity: hired, route: "/shortlist/hired" },
 ];
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .v-app-bar {
   height: 138px;
   box-shadow: $shadow;
 }
 
-.header-title{
+.chip{
+  cursor: pointer;
+}
+
+.header-title {
   height: 72px;
 }
 
-.v-list{
+.v-list {
   overflow-x: auto;
 }
 
 .v-list::-webkit-scrollbar {
-        height: 0px;
-    }
+  height: 0px;
+}
 
 .v-list-item--active {
   border-bottom: 4px solid #6367e7;

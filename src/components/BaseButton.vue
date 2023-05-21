@@ -1,5 +1,6 @@
 <template v-slot:actions>
   <v-btn
+    :loading="loader"
     height="48px"
     color="primary"
     class="base-btn text-capitalize"
@@ -16,6 +17,7 @@ import { ref } from "vue";
 
 const props = defineProps<{
   title: string;
+  loader?: boolean;
   variant: "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
 }>();
 

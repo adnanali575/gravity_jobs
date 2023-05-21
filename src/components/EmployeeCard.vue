@@ -9,9 +9,9 @@
               icon=""
               flat
               router
-              :to="'/search/' + employee.userId"
+              :to="'/search/' + employee.docId"
             >
-              <img :src="employee.imageurl" />
+              <img :src="employee.imageUrl" />
             </v-btn>
           </div>
 
@@ -22,10 +22,20 @@
               {{ employee.firstName }} {{ employee.lastName }}
             </p>
             <span class="d-flex flex-wrap">
-              <v-chip class="mx-1" v-for="(emplo, index) in employee.seniority" :key="index"
-              :class="`bg-${emplo} text-${emplo}-text font-weight-bold px-4`"
-              >{{ emplo }}</v-chip
-            >
+              <v-chip
+                v-if="seniorityArray"
+                class="mx-1"
+                v-for="(emplo, index) in employee.seniority"
+                :key="index"
+                :class="`bg-${emplo} text-${emplo}-text font-weight-bold px-4`"
+                >{{ emplo }}</v-chip
+                >
+                <v-chip
+                v-if="!seniorityArray"
+                class="mx-1"
+              :class="`bg-${employee.seniority} text-${employee.seniority}-text font-weight-bold px-4`"
+              >{{ employee.seniority }}</v-chip
+              >
             </span>
           </v-sheet>
         </v-sheet>
@@ -67,7 +77,7 @@
         </v-sheet>
 
         <div class="mt-5" v-if="profilePage">
-          <EmployeeControls :employee="employee"/>
+          <EmployeeControls :employee="employee" />
         </div>
       </v-card>
     </v-sheet>
@@ -75,7 +85,6 @@
 </template>
 
 <script setup lang="ts">
-import store from "@/store/store";
 import EmployeeControls from "./EmployeeControls.vue";
 import type { EmployeesInfoTypes } from "@/types";
 import { computed } from "@vue/reactivity";
@@ -86,12 +95,14 @@ const props = defineProps<{
   employee: EmployeesInfoTypes;
 }>();
 
-const showProfile = () => {
-  store.dispatch("showProfile", props.employee);
-};
+let seniorityArray = computed(()=>{
+  if(route.name === 'Profile') return true
+  else return false
+})
+
 
 const profilePage = computed(() => {
-  if (route.name === "profile") return false;
+  if (route.name === "Profile") return false;
   else return true;
 });
 </script>

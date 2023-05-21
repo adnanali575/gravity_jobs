@@ -15,8 +15,8 @@
         <v-btn class="nav-btn" router to="/chat">
           <img src="@/assets/icons/messenger_black.svg" />
         </v-btn>
-
-        <notification class="nav-btn" />
+        
+          <notification/>
 
         <v-menu>
           <template v-slot:activator="{ props }">
@@ -35,19 +35,12 @@
 <script setup lang="ts">
 import notification from "./Notification.vue";
 import AccountControl from "./AccountControl.vue";
-
-const signOut = () => {};
 </script>
 
 <style scoped lang="scss">
 .bottom-bar {
   height: 56px;
   box-shadow: 0px 0px 1px 1px #d8d8d8;
-
-  .icons-box {
-    width: 100%;
-    box-sizing: border-box;
-  }
 
   .bottom-bar img {
     width: 24px;
@@ -61,6 +54,7 @@ const signOut = () => {};
 
     .nav-btn {
       height: 64px;
+      
       border-radius: 0px;
 
       img {

@@ -2,9 +2,16 @@
   <v-btn
     class="post-btn"
     flat
+    icon=""
     color="primary"
-    icon="mdi-plus"
     roter
-    to="/post"
-  ></v-btn>
+    to="/post-job"
+  >
+  <v-icon :color="color">mdi-clipboard-check-multiple-outline</v-icon></v-btn>
 </template>
+
+<script setup lang="ts">
+const props = defineProps<{
+  color: string
+}>()
+</script>

@@ -16,6 +16,7 @@ import ResetConfirm from "@/views/ResetConfirm.vue";
 import SignUp from "@/views/SignUp.vue";
 import Account from "@/views/Account.vue";
 import Post from "@/views/post.vue";
+import FormSubmitted from '@/components/FormSubmitted.vue'
 
 import SideBar from "@/components/SideBar.vue";
 import SearchHeader from "@/components/SearchHeader.vue";
@@ -23,6 +24,7 @@ import ShortListHeader from "@/components/ShortlistHeader.vue";
 import CustomHeader from "@/components/CustomHeader.vue";
 import BottomNavBar from "@/components/BottomBar.vue";
 import ChatWindow from "@/components/ChatWindow.vue";
+
 import { ref } from "vue";
 import store from "@/store/store";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -49,7 +51,7 @@ const router = createRouter({
     },
     {
       path: "/search/:id",
-      name: "profile",
+      name: "Profile",
       meta: { auth: true },
       components: {
         default: Profile,
@@ -85,18 +87,7 @@ const router = createRouter({
         header: CustomHeader,
         BottomNavBar: BottomNavBar,
       },
-      children: [{ path: ":id", component: ChatWindow }],
-    },
-    {
-      path: "/profile",
-      name: "Profile",
-      meta: { auth: true },
-      components: {
-        default: Profile,
-        SideBar: SideBar,
-        header: SearchHeader,
-        BottomNavBar: BottomNavBar,
-      },
+      children: [{ path: ":id", name: 'Chat', component: ChatWindow }],
     },
     {
       path: "/forgot-password",
@@ -140,7 +131,18 @@ const router = createRouter({
       },
     },
     {
-      path: "/post",
+      path: "/submitted",
+      name: "Submitted",
+      meta: { auth: true },
+      components: {
+        default: FormSubmitted,
+        SideBar: SideBar,
+        header: CustomHeader,
+        BottomNavBar: BottomNavBar,
+      },
+    },
+    {
+      path: "/post-job",
       name: "Post",
       meta: { auth: true },
       components: {

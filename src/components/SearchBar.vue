@@ -6,6 +6,7 @@
         <VRow no-gutters>
           <VCol cols="12" md="4">
             <SelectDropDown
+              v-model="stacksValue"
               label="Stacks Used"
               :multiple="true"
               :dropDownItems="stacksList"
@@ -16,35 +17,36 @@
             </SelectDropDown>
           </VCol>
 
-          <VDivider vertical></VDivider>
+          <VDivider class="select-box-divider" vertical></VDivider>
 
           <VCol cols="12" md="4">
-            <SelectDropDown
+            <SelectDropDown v-model="locationValue"
               label="Location"
               :multiple="false"
               :dropDownItems="locationsList"
             />
           </VCol>
 
-          <VDivider vertical></VDivider>
+          <VDivider class="select-box-divider" vertical></VDivider>
           <VCol cols="12" md="4">
-            <SelectDropDown
+            <SelectDropDown v-model="seniorityValue"
               label="Seniority"
               :multiple="true"
               :dropDownItems="seniorityList"
             >
-              <template #controls="test">
-                <BaseButton title="Clear" variant="text" />
+            <template #controls="test">
+                <BaseButton @click="clearStacks" title="Clear" variant="text" />
               </template>
             </SelectDropDown>
           </VCol>
         </VRow>
       </div>
 
-      <v-btn class="bg-primary mx-1" @click="search" flat icon="">
-        <img src="@/assets/icons/Search.svg" alt="" />
+      <v-btn :loading="store.state.searchLoader" class="search-btn bg-primary mx-1" @click="search" flat icon="">
+        <img src="@/assets/icons/Search_white.svg" alt="" />
         <p class="search-btn-text text-capitalize ml-3">Search</p>
       </v-btn>
+      <slot name="postBtn"></slot>
     </div>
   </div>
 </template>
@@ -53,7 +55,7 @@
 import store from "@/store/store";
 import SelectDropDown from "./SelectDropDown.vue";
 import BaseButton from "./BaseButton.vue";
-import { ref } from "vue";
+import { ref} from "vue";
 
 let stacksList = ref<string[]>(["Vue js", "React", "Angular", "jQuery"]);
 let locationsList = ref<string[]>([
@@ -64,17 +66,23 @@ let locationsList = ref<string[]>([
 ]);
 let seniorityList = ref<string[]>(["Junior", "Senior", "Lead", "CTO"]);
 
-let stacks = ref([]);
-let location = ref([]);
-let seniority = ref([]);
+let stacksValue = ref([]);
+let locationValue = ref('');
+let seniorityValue = ref([]);
 
-const clear = () => {};
+const clearStacks = () => {
+  stacksValue = ref([])
+};
 
 const search = () => {
-  store.dispatch("getData", {
-    stacks: ["Vue js", "Angular"],
-    location: "Pakistan",
-    seniority: ["CTO"],
+  const stacks = Array.from(stacksValue.value);
+  const location = locationValue.value
+  const seniority = Array.from(seniorityValue.value);
+
+  store.dispatch("getCandidatesDataByQuerySearch", {
+    stacks: stacks,
+    location: location,
+    seniority: seniority,
   });
 };
 </script>
@@ -135,7 +143,7 @@ const search = () => {
       border-radius: 40px;
     }
 
-    .v-divider {
+    .select-box-divider {
       display: none;
     }
 
@@ -160,7 +168,10 @@ const search = () => {
       border-radius: 40px;
       width: 100%;
       height: 58px !important;
-      margin: 24px 0px;
+    }
+
+    .search-btn{
+      margin: 15px 0px;
     }
   }
 }

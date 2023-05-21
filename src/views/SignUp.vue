@@ -3,25 +3,17 @@
     <SignInForm>
       <template #form>
         <div class="form-content">
-          <SignUpForm>
-            <template #userDetails="userDetails">
-              <BaseButton
-                @click="signUp(userDetails)"
-                title="Sign up"
-                variant="flat"
-              />
-            </template>
-          </SignUpForm>
+          <SignUpForm/>
         </div>
       </template>
 
       <template #optionalNavigation>
         <v-sheet
-          class="d-flex flex-wrap align-center justify-center align-self-end"
+          class="option d-flex flex-wrap align-center justify-center align-self-end"
         >
           <p class="text-center">Don’t have any account?</p>
           <v-btn
-            class="text-capitalize"
+            class="text-capitalize optional-signin"
             variant="text"
             color="primary"
             router
@@ -37,13 +29,20 @@
 <script setup lang="ts">
 import SignUpForm from "@/components/SignUpForm.vue";
 import SignInForm from "@/components/SignInForm.vue";
-import BaseButton from "@/components/BaseButton.vue";
 import store from "@/store/store";
 import type { SignUpObject } from "@/types";
-
-let signUp = (userDetails: SignUpObject) => {
-  store.dispatch("signUp", userDetails);
-};
+import { computed } from "vue";
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.sign-up{
+  .option{
+    height: 100%;
+  }
+  .optional-signin {
+  width: 99px;
+  margin: 0px 10px;
+  height: 26px;
+}
+}
+</style>

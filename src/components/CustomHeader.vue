@@ -25,4 +25,10 @@ const props = defineProps<{
   height: 104px;
   box-shadow: $shadow;
 }
+
+@media (max-width: 900px){
+  .v-app-bar {
+    height: 67px;
+}
+}
 </style>

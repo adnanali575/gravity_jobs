@@ -2,16 +2,14 @@
   <div class="left" id="list">
     <div class="search-bar-menu bg-white">
       <div class="search-field d-flex align-center justify-space-between">
-        <span class="text-field-box d-flex align-center">
-          <v-btn icon="" class="search-btn bg-input-background" flat>
-            <img src="@/assets/icons/search_black.svg" alt="" />
-          </v-btn>
-          <BaseInput
-            class="ps-14"
-            v-model="searchText"
-            placeholder="Search Inbox"
-          />
-        </span>
+        <v-btn icon="" class="search-btn bg-input-background" flat>
+          <img src="@/assets/icons/search.svg" alt="" />
+        </v-btn>
+        <validationFreeInput
+          class="ps-11"
+          v-model="searchText"
+          placeholder="Search Inbox"
+        />
         <slot name="close-list"></slot>
       </div>
     </div>
@@ -19,16 +17,29 @@
     <div class="list">
       <v-divider class="divider"></v-divider>
       <v-list class="py-0">
-        <div v-for="(user, index) in usersDetails" :key="index">
+        <PreLoader v-if="chatListLoader" class="chat-list-pre-loader" />
+        <p
+          v-if="!chatListLoader && chatUsers.length == 0"
+          class="pa-5 text-center"
+        >
+          No User Yet..
+        </p>
+        <div
+          v-if="!chatListLoader && chatUsers.length > 0"
+          v-for="(user, index) in filteredChatUsers"
+          :key="index"
+          @click="openChat"
+        >
           <v-list-item
             class="chat-item"
             :value="user.userId"
+            exact
             router
             :to="'/chat/' + user.userId"
           >
             <v-sheet class="py-2 d-flex">
               <v-avatar class="profile-avatar me-4">
-                <img :src="user.userProfile" />
+                <img :src="user.imageUrl" />
               </v-avatar>
 
               <div class="inner-content">
@@ -36,10 +47,13 @@
                   <b class="heading"
                     >{{ user.firstName }} {{ user.lastName }}</b
                   >
-                  <p>12:45</p>
+                  <p v-if="user.minutes && user.hours">
+                    {{ hours(user.hours) }}:{{ minutes(user.minutes) }}
+                    {{ period(user.hours) }}
+                  </p>
                 </div>
                 <div class="text d-flex align-center">
-                  <p>{{ user.lastMessage }}</p>
+                  <p>{{ lastMessage(user.lastMessage) }}</p>
                   <v-badge
                     v-if="false"
                     class="me-1"
@@ -58,39 +72,95 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router/router";
-import BaseInput from "./BaseInput.vue";
+import validationFreeInput from "./validationFreeInput.vue";
+import PreLoader from "./PreLoader.vue";
 import store from "@/store/store";
-import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import type { ChatUser } from "@/types";
+import { computed, ref } from "vue";
 
-const route = useRoute();
+let searchText = ref("");
 
-let searchText = ref<string>("");
 
-onMounted(() => {
-  store.dispatch("getUsersDetails");
-});
+const filteredChatUsers = computed(() => {
+  const searchQuery = searchText.value.toLowerCase().trim();
+  let sortedUsers = chatUsers.value.slice();
+  
+  if (searchQuery) {
+    sortedUsers = sortedUsers.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      return fullName.includes(searchQuery);
+    });
+  }
 
-let usersDetails = computed(() => {
-  return store.state.usersDetails;
-});
-
-router.afterEach((to) => {
-  store.dispatch("getMessages", {
-    senderId: store.state.currentUserDetails.userId,
-    receiverId: route.params.id,
+  sortedUsers.sort((a, b) => {
+    const timeA = getTimeValue(a.hours, a.minutes);
+    const timeB = getTimeValue(b.hours, b.minutes);
+    return timeB - timeA;
   });
+
+  return sortedUsers;
 });
+
+const getTimeValue = (hours: number, minutes: number) => {
+  return hours * 60 + minutes;
+};
+
+const openChat = () => {
+  store.state.chats = !store.state.chats;
+};
+let chatUsers = computed(() => {
+  let data = store.state.chatUsers;
+  let uniqueObjects: ChatUser[] = [];
+  let ids: any[] = [];
+  data.forEach((obj) => {
+    if (!ids.includes(obj.userId)) {
+      uniqueObjects.push(obj);
+      ids.push(obj.userId);
+    }
+  });
+  return uniqueObjects;
+});
+
+const chatListLoader = computed(() => {
+  return store.state.chatListLoader;
+});
+
+const hours = (hours: number) => {
+  let h: number = hours;
+  if (h > 12) h = hours - 12;
+  if (h < 10) return "0" + h.toString();
+  else return h;
+};
+
+const minutes = (minutes: number) => {
+  if (minutes < 10) return "0" + minutes?.toString();
+  else return minutes?.toString();
+};
+
+const period = (hours: number) => {
+  if (hours > 12) return "PM";
+  else return "AM";
+};
+
+const lastMessage = (message: string) => {
+  if (message) {
+    if (message.length > 20) return message.slice(0, 26) + "......";
+    else return message;
+  } else return "";
+};
 </script>
 
 <style scoped lang="scss">
 @import "@/scss/_variables";
 
+.chat-list-pre-loader {
+  width: 200px;
+}
+
 .left {
   width: 500px;
   display: grid;
-  grid-template-rows: 80px 1fr;
+  grid-template-rows: 72px 1fr;
 
   .divider {
     opacity: 1;
@@ -103,12 +173,17 @@ router.afterEach((to) => {
   width: 100%;
 
   .search-btn {
-    margin-right: -52px;
+    margin-right: -48px;
   }
 }
 
 .list {
   overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: $white;
+}
+
+.list:hover{
   overflow-y: auto;
 }
 
@@ -124,9 +199,11 @@ router.afterEach((to) => {
   background-color: $white;
 }
 
-.text-field-box {
-  height: 56px;
+.search-field-box {
+  height: 48px;
   width: 100%;
+  background: $input-background;
+  border-radius: 40px;
 }
 
 .text {
@@ -149,7 +226,6 @@ router.afterEach((to) => {
   height: 64px;
 
   img {
-    width: 100%;
     height: auto;
   }
 }
@@ -163,7 +239,7 @@ router.afterEach((to) => {
 }
 
 @media (max-width: 900px) {
-  .text-field-box {
+  .search-field-box {
     width: 85% !important;
   }
 }

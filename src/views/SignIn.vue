@@ -5,19 +5,24 @@
         <div class="form-content bg-red">
           <v-sheet>
             <BaseInput
+              @keyup="validation"
               v-model="email"
-              class="controls mt-4"
+              :empty="emailVal"
+              class="controls my-6"
               type="email"
               label="Email"
             />
             <BaseInput
+              @keyup="validation"
               v-model="password"
-              class="controls mt-4"
+              :empty="passwordVal"
+              class="controls mt-6"
               type="password"
               label="Password"
             />
             <BaseButton
               @click="SignIn"
+              :loader="signInLoader"
               class="controls mt-6"
               title="Sign in"
               variant="flat"
@@ -38,11 +43,11 @@
 
       <template #optionalNavigation>
         <v-sheet
-          class="d-flex flex-wrap align-center justify-center align-self-end"
+          class="option d-flex flex-wrap align-center justify-center align-self-end"
         >
           <p class="text-center">Don’t have any account?</p>
           <v-btn
-            class="text-capitalize"
+            class="optional-signup text-capitalize"
             variant="text"
             color="primary"
             router
@@ -60,12 +65,42 @@ import SignInForm from "@/components/SignInForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import store from "@/store/store";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
-let email = ref('');
-let password = ref('');
+const signInLoader = computed(() => {
+  return store.state.signInLoader;
+});
+
+let email = ref("");
+let password = ref("");
+
+let emailVal = ref(false);
+let passwordVal = ref(false);
 
 let SignIn = () => {
-  store.dispatch("SignIn", { email: email.value, password: password.value });
+  if (!email.value || !password.value) {
+    if (!email.value) emailVal.value = true;
+    if (!password.value) passwordVal.value = true;
+  } else {
+    store.dispatch("SignIn", { email: email.value, password: password.value });
+  }
+};
+
+const validation = () => {
+  if (email.value) emailVal.value = false;
+  if (password.value) passwordVal.value = false;
 };
 </script>
+
+<style scoped lang="scss">
+.sign-in {
+  .option {
+    height: 100%;
+  }
+  .optional-signup {
+    width: 99px;
+    margin: 0px 10px;
+    height: 26px;
+  }
+}
+</style>

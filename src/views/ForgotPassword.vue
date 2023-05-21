@@ -8,12 +8,15 @@
         <div class="form-content bg-red">
           <v-sheet>
             <BaseInput
+              @keyup="validation"
               v-model="email"
+              :empty="emailVal"
               class="controls mt-4"
               type="email"
               label="Email"
             />
             <BaseButton
+              :loader="store.state.forgotPasswordLoader"
               @click="resetPassword"
               class="controls mt-6"
               title="Submit"
@@ -31,11 +34,22 @@ import SignInForm from "@/components/SignInForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import store from "@/store/store";
+import { ref } from "vue";
 
-let email: string = "";
+let email = ref("");
+
+let emailVal = ref(false);
 
 let resetPassword = () => {
-  store.dispatch("resetPassword", email);
+  if (!email.value) {
+    emailVal.value = true;
+  } else {
+    store.dispatch("resetPassword", email.value);
+  }
+};
+
+const validation = () => {
+  if (email.value) emailVal.value = false;
 };
 </script>
 

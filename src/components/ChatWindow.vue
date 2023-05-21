@@ -2,16 +2,20 @@
   <div class="right">
     <div class="profile-bar">
       <v-sheet height="100%" class="d-flex align-center">
-        <v-btn icon="" flat router class="mx-4" to="/profile">
-          <v-avatar class="profile-avatar mx-4">
-            <img
-              src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-            />
-          </v-avatar>
-        </v-btn>
-        <p class="name-heading">Jean Besson-Perrier</p>
+        <v-avatar class="profile-avatar mx-4">
+          <img :src="chatUser.imageUrl" />
+        </v-avatar>
+        <p class="name-heading">
+          {{ chatUser.firstName }} {{ chatUser.lastName }}
+        </p>
         <v-spacer></v-spacer>
-        <slot name="show-list"></slot>
+        <v-btn
+          class="chat-list-toggle mx-3"
+          icon="mdi-format-list-bulleted"
+          density="comfortable"
+          flat
+          @click="toggleList"
+        ></v-btn>
       </v-sheet>
       <v-divider></v-divider>
     </div>
@@ -25,22 +29,22 @@
       </v-sheet>
 
       <v-sheet
-        class="chat-info my-4 d-flex"
+        class="chat-info mx-auto my-4 d-flex"
         v-for="(message, index) in messages"
         :key="index"
       >
         <v-avatar class="profile-avatar me-4">
-          <img :src="message.userProfile" />
+          <img :src="message.imageUrl" />
         </v-avatar>
         <div>
           <span class="d-flex my-1">
             <p class="name">{{ userName(message.userName) }}</p>
-            <p class="ms-5">
+            <p class="date ms-5">
               {{ hours(message.hours) }}:{{ minutes(message.minutes) }}
               {{ period(message.hours) }}
             </p>
           </span>
-          <p class="desccription">
+          <p class="desccription" :class="{ sender: sender(message.senderId) }">
             {{ message.text }}
           </p>
         </div>
@@ -51,7 +55,8 @@
       <div class="chat-box d-flex justify-space-between align-center">
         <WriteMessagePopUp />
         <v-sheet width="100%">
-          <BaseInput
+          <validationFreeInput
+            class="pe-13"
             v-model="messageText"
             placeholder="Write your message...."
             @keypress.enter="sendMessage"
@@ -70,42 +75,70 @@
 </template>
 
 <script setup lang="ts">
-import BaseInput from "@/components/BaseInput.vue";
+import validationFreeInput from "@/components/validationFreeInput.vue";
 import WriteMessagePopUp from "./WriteMessagePopUp.vue";
 import { ref } from "vue";
-import { onMounted } from "vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
+import { onMounted, watch } from "vue";
+
 const route = useRoute();
 
 let messageText = ref("");
 
-const sendMessage = () => {
-  store.dispatch("sendMessage", {
-    text: messageText.value,
-    senderId: store.state.currentUserDetails.userId,
-    receiverId: route.params.id,
-    userName: `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`,
-    profile: store.state.currentUserDetails.userProfile,
-  });
-  messageText.value = "";
+let toggleList = () => {
+  store.state.chats = !store.state.chats;
 };
 
-const messages = computed(() => {
-  let messages = store.state.messages;
-  messages.sort((a, b) => b.date.getTime() - a.date.getTime());
-  return messages;
+const sendMessage = () => {
+  if (messageText.value) {
+    let recieverId = ref<string | string[]>();
+    recieverId.value = route.params.id;
+    store.dispatch("sendMessage", {
+      text: messageText.value,
+      recieverId: recieverId.value,
+    });
+    messageText.value = "";
+  }
+};
+
+onMounted(() => {
+  let recieverId = route.params.id;
+  store.dispatch("getMessages", recieverId);
 });
 
-const userName = ((userName: string)=>{
-  if(userName == `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`) {
-    return 'You'
+watch(
+  () => route.params.id,
+  (id) => {
+    store.dispatch("getMessages", id);
   }
-  else{
-    return userName
-  }
-})
+);
+
+const chatUser = computed(() => {
+  return store.state.chatUser;
+});
+
+const messages = computed(() => {
+  return store.state.messages;
+});
+
+const userName = (name: string) => {
+  let userName = `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`;
+
+  if (name === userName) return "You";
+  else return name;
+};
+
+const sender = (senderId: string) => {
+  if (senderId === store.state.currentUserDetails.userId) return true;
+  else return false;
+};
+
+const period = (hours: number) => {
+  if (hours > 12) return "PM";
+  else return "AM";
+};
 
 const hours = (hours: number) => {
   let h: number = hours;
@@ -118,25 +151,29 @@ const minutes = (minutes: number) => {
   if (minutes < 10) return "0" + minutes.toString();
   else return minutes.toString();
 };
-
-const period = (hours: number) => {
-  if (hours > 12) return "PM";
-  else return "AM";
-};
 </script>
 
 <style scoped lang="scss">
 @import "@/scss/variables";
+
+.sender {
+  background-color: $primary !important;
+  color: $white !important;
+}
+
 .right {
   overflow: hidden;
   width: 100%;
   z-index: 1;
   display: grid;
-  grid-template-rows: 80px 1fr 80px;
+  grid-template-rows: 72px 1fr 80px;
 
   .profile-bar {
     width: 100%;
-    height: 80px;
+  }
+
+  .chat-list-toggle {
+    display: none;
   }
 
   .name-heading {
@@ -148,10 +185,14 @@ const period = (hours: number) => {
   .chat-section {
     background-color: $white;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 20px 20px;
     display: flex;
     flex-direction: column-reverse;
+  }
+
+  .chat-section:hover{
+    overflow-y: auto;
   }
 
   .name {
@@ -161,23 +202,27 @@ const period = (hours: number) => {
   }
 
   .desccription {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 5px 100%, 5px 6px);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 7px 100%, 7px 7px);
     font-weight: 400;
     font-size: 14px;
-    display: inline-block;
-    min-width: 100px;
+    width: fit-content;
     line-height: 24px;
-    // background-color: #e9e9e9;
-    background-color: $primary;
-    color: $white;
+    background-color: $input-background;
+    color: $label-primary;
     padding: 7px 10px 7px 20px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 
   .profile-avatar img {
     height: 100%;
+  }
+
+  .date {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
   }
 
   .date-text {
@@ -188,8 +233,14 @@ const period = (hours: number) => {
     }
   }
 
+  .chat-info {
+    width: 100%;
+    max-width: 1000px;
+  }
+
   .chat-box {
     width: 100%;
+    max-width: 1000px;
   }
 
   .chat-bar {
@@ -200,9 +251,20 @@ const period = (hours: number) => {
     align-items: center;
 
     .send-btn {
-      margin-left: -53px;
-      margin-top: -3px;
+      margin-left: -46px;
+      height: 40px !important;
+      width: 40px;
     }
+  }
+}
+
+@media (max-width: 900px) {
+  .chat-list-toggle {
+    display: flex !important;
+  }
+
+  .right {
+    grid-template-rows: 65px 1fr 80px;
   }
 }
 </style>

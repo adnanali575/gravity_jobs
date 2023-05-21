@@ -1,18 +1,18 @@
 <template>
   <div class="profile">
-    <div
-      class="buttons py-7 d-flex align-center justify-space-between px-10 px-md-14"
-    >
+    <div class="profile-heading">
       <h1>Profile</h1>
-      <span class="btn-box d-flex align-center">
-        <!-- <EmployeeControls/> -->
-      </span>
     </div>
 
-    <div class="profile-content px-4 px-sm-8 px-md-12">
+    <PreLoader v-if="profileLoader"></PreLoader>
+
+    <div v-if="employeeInfo && !profileLoader" class="profile-content px-4 px-sm-8 px-md-12">
       <v-row>
         <v-col cols="12" md="5" class="">
-          <EmployeeCard :employee="employeeInfo" class="ma-n2 ma-md-n3"></EmployeeCard>
+          <EmployeeCard
+            :employee="employeeInfo"
+            class="ma-n2 ma-md-n3"
+          ></EmployeeCard>
         </v-col>
 
         <v-col class="mt-n3 mt-md-0" cols="12" md="7">
@@ -26,27 +26,32 @@
 <script setup lang="ts">
 import EmployeeCard from "@/components/EmployeeCard.vue";
 import EmployeeInfo from "@/components/EmployeeInfo.vue";
-import EmployeeControls from "@/components/EmployeeControls.vue";
+import PreLoader from "@/components/PreLoader.vue";
 import store from "@/store/store";
-import { computed } from "@vue/reactivity";
-import { useRoute } from 'vue-router'
-import { onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { onMounted, computed } from "vue";
 
-const route = useRoute()
+const route = useRoute();
 
-onMounted(()=>{
-  store.dispatch('showProfile', route.params.id)
-})
+onMounted(() => {
+  store.dispatch("showProfile", route.params.id);
+});
 
-const employeeInfo = computed(()=>{
-  return store.state.employeeInfo
-})
+const profileLoader = computed(() => {
+  return store.state.profileLoader;
+});
 
+const employeeInfo = computed(() => {
+  return store.state.employeeInfo;
+});
 </script>
 
 <style scoped lang="scss">
+.profile-heading {
+  margin: 20px 0px 10px 50px;
+}
 .profile {
-  margin-top: 105px;
+  padding-top: 105px;
 }
 .add-btn {
   width: 185px;
@@ -56,13 +61,18 @@ const employeeInfo = computed(()=>{
   max-width: 1800px;
 }
 
-.btn-box{
-  width: 200px;
-}
-
 @media (max-width: 1279px) {
   .profile {
     padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 959px) {
+  .profile-heading{
+    margin-left: 30px;
+  }
+  .profile {
+    padding-top: 50px;
   }
 }
 </style>
