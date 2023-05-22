@@ -19,7 +19,7 @@
               type="password"
               label="Confirm new password"
             />
-            <BaseButton class="controls mt-6" title="Sign in" vari="flat" />
+            <BaseButton class="controls mt-6" title="Sign in" variant="flat" />
           </v-sheet>
         </div>
       </template>
@@ -37,7 +37,7 @@ let confirmPassword: string = "";
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .instructions {
   width: 332px;
   font-style: normal;

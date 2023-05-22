@@ -1,51 +1,63 @@
 <template>
-  <v-select
-    :hide-selected="check"
-    :label="label"
-    :items="dropDownItems"
-    :multiple="multiple"
-    :model-value="modelValue"
-    @input="$emit('update:modelValue')"
-  >
-    <template v-slot:append-item>
-      <div v-if="multiple">
-        <v-divider class="mb-2"></v-divider>
+  <div :class="{ 'select-list-validation-style': validate }">
+    <v-select
+      height="48px"
+      class="select"
+      :value="modelValue"
+      @update:modelValue="$emit('update:modelValue', $event)"
+      :label="label"
+      :items="dropDownItems"
+      :multiple="multiple"
+    >
+      <template v-slot:append-item>
+        <div v-if="multiple">
+          <v-divider class="mb-2"></v-divider>
 
-        <v-list-item>
-          <div class="d-flex justify-space-between">
-            <v-btn @click="clear" rounded variant="text" color="primary"
-              >Clear</v-btn
-            >
-            <v-btn @click="save" rounded flat color="primary">Save</v-btn>
-          </div>
-        </v-list-item>
-      </div>
-    </template>
-  </v-select>
+          <v-list-item>
+            <slot name="controls"></slot>
+          </v-list-item>
+        </div>
+      </template>
+    </v-select>
+  </div>
+  <p v-if="empty" class="field-empty ml-6">{{ label }} can't be empty</p>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from 'vue'
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 const props = defineProps<{
   dropDownItems: Array<string>;
   label: string;
-  multiple: boolean;
-  modelValue: Array<string>;
+  multiple?: boolean | undefined;
+  modelValue: any;
+  empty?: boolean;
 }>();
 
-const emit = defineEmits(["update:modelValue"]);
+let validate = ref(false)
 
-let check = ref(false);
+if(route.path == '/post-job') validate.value = true
+else validate.value = false
 
-const clear = () => {};
 
-const save = () => {
-  check.value = !check.value;
-};
 </script>
 
 <style lang="scss">
+.select-list-validation-style {
+  height: 48px;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+.field-empty {
+  color: #db0000;
+  animation: error 0.3s linear;
+  font-size: 13px;
+  line-height: 15px;
+}
+
 .v-field__outline {
   opacity: 0;
 }

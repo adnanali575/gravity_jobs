@@ -1,16 +1,41 @@
-import type { employeesInfoTypes, jobPostingObject } from "@/types";
-import { ref } from "vue";
+import type {
+  ChatUser,
+  EmployeesInfoTypes,
+  Messages,
+  UserDetails,
+} from "@/types";
 
 const state = {
-  employeesInfo: Array<employeesInfoTypes>(),
-  shortListedEmployees: Array<employeesInfoTypes>(),
-  contactedEmployees: Array<employeesInfoTypes>(),
-  interviewingEmployees: Array<employeesInfoTypes>(),
-  hiredEmployees: Array<employeesInfoTypes>(),
-  employeeInfo: {} as employeesInfoTypes,
-  userId: ref<string>(""),
-
-  logInLogOutAlert: ref(false),
+  employeesInfo: [] as Array<EmployeesInfoTypes>,
+  shortListedEmployees: [] as Array<EmployeesInfoTypes>,
+  contactedEmployees: [] as Array<EmployeesInfoTypes>,
+  interviewingEmployees: [] as Array<EmployeesInfoTypes>,
+  hiredEmployees: [] as Array<EmployeesInfoTypes>,
+  usersDetails: [] as Array<UserDetails>,
+  messages: [] as Array<Messages>,
+  employeeInfo: {} as EmployeesInfoTypes,
+  currentUserDetails: {} as UserDetails,
+  chatUsers: [] as Array<ChatUser>,
+  chatUser: {} as ChatUser,
+  employeeToTerminate: {} as EmployeesInfoTypes,
+  bodyPreLoader: false,
+  searchLoader: false,
+  chats: false,
+  success: false,
+  error: false,
+  shortListLoader: false,
+  contactLoader: false,
+  interviewLoader: false,
+  hireLoader: false,
+  chatListLoader: false,
+  confirmTermination: false,
+  signInLoader: false,
+  signUpLoader: false,
+  forgotPasswordLoader: false,
+  cardButtonLoader: false,
+  profileLoader: false,
+  accountUpdateLoader: false,
+  formSubmitted: false,
 };
 
 export default state;

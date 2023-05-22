@@ -1,31 +1,56 @@
-import type { employeesInfoTypes } from "@/types";
+import type {
+  ChatUser,
+  EmployeesInfoTypes,
+  Messages,
+  State,
+  UserDetails,
+} from "@/types";
 
 export default {
-  SetGetData: (state: any, payload: employeesInfoTypes) => {
+  setCandidatesData: (state: State, payload: EmployeesInfoTypes) => {
     state.employeesInfo.push(payload);
   },
 
-  setShowProfile: (state: any, payload: employeesInfoTypes) => {
+  setUsersDetails: (state: State, payload: UserDetails) => {
+    state.usersDetails.push(payload);
+  },
+
+  setShowProfile: (state: State, payload: EmployeesInfoTypes) => {
     state.employeeInfo = payload;
   },
 
-  setCurrentUserDetails: (state: any, payload: string) => {
-    state.userId = payload;
+  setCurrentUserDetails: (state: State, payload: UserDetails) => {
+    state.currentUserDetails = payload;
   },
 
-  SetGetShortlistEmployees: (state: any, payload: employeesInfoTypes) => {
+  SetShortlistEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.shortListedEmployees.push(payload);
   },
 
-  SetGetContactedEmployees: (state: any, payload: employeesInfoTypes) => {
+  SetContactedEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.contactedEmployees.push(payload);
   },
 
-  setGetInterviewingEmployees: (state: any, payload: employeesInfoTypes) => {
+  setInterviewingEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.interviewingEmployees.push(payload);
   },
 
-  setGetHiredEmployees: (state: any, payload: employeesInfoTypes) => {
+  setHiredEmployees: (state: State, payload: EmployeesInfoTypes) => {
     state.hiredEmployees.push(payload);
+  },
+
+  setEmployeeToTerminate: (state: State, payload: EmployeesInfoTypes) => {
+    state.employeeToTerminate = payload;
+  },
+
+  // Messaging Section ------------------
+  setMessages: (state: State, payload: Messages) => {
+    state.messages.push(payload);
+  },
+  setChatUsers: (state: State, payload: ChatUser) => {
+    state.chatUsers.push(payload);
+  },
+  setCurrentChatUser: (state: State, payload: ChatUser) => {
+    state.chatUser = payload;
   },
 };

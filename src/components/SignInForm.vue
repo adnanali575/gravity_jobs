@@ -1,8 +1,8 @@
 <template>
   <div class="form-container">
-    <v-sheet flat height="100%" class="login-form">
+    <v-sheet flat class="login-form">
       <div class="d-flex flex-column align-center justify-center">
-        <img class="logo my-8" src="@/assets/icons/logo.svg" alt="" />
+        <img class="logo my-6" src="@/assets/icons/logo.svg" alt="" />
         <v-sheet class="form-control">
           <slot name="form"></slot>
         </v-sheet>
@@ -26,8 +26,10 @@
   </div>
 </template>
 
+<script setup lang="ts"></script>
+
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .form-container {
   height: 100vh;
   display: grid;
@@ -39,17 +41,20 @@
 }
 
 .login-form {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: grid;
-  grid-template-rows: 1fr 50px;
+  grid-template-rows: 1fr 40px;
 }
 
 .form-control {
-  width: 350px;
+  width: 400px;
 }
 
 .img-section {
   background: url("@/assets/images/stars.png") center center fixed;
-  background-color: #140D33;
+  background-color: #140d33;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,17 +68,17 @@
   z-index: 1000;
 }
 
-.desktop-banner{
+.desktop-banner {
   height: fit-content;
 }
 
-@media (min-width: 1700px){
-  .form-container{
+@media (min-width: 1700px) {
+  .form-container {
     grid-template-columns: 800px 1fr;
   }
 
-  .form-control{
-    width: 500px ;
+  .form-control {
+    width: 500px;
   }
 }
 
@@ -82,7 +87,7 @@
     grid-template-columns: 1fr;
   }
 
-  .form-control{
+  .form-control {
     width: 450px;
   }
 
@@ -91,8 +96,8 @@
   }
 }
 
-@media(max-width: 500px){
-  .form-control{
+@media (max-width: 500px) {
+  .form-control {
     width: 85%;
   }
 }

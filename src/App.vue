@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <v-layout class="layout">
+    <div class="body-pre-loader" v-if="store.state.bodyPreLoader">
+      <PreLoader />
+    </div>
+    <v-layout class="layout" v-else>
       <router-view name="SideBar"></router-view>
       <router-view
         :headerTitle="headerTitle"
@@ -8,9 +11,8 @@
         name="header"
       ></router-view>
 
-      <v-main class="main-container">
+      <v-main class="main-container py-0">
         <router-view class="main-view"></router-view>
-        <router-view name="FloatinMessage"></router-view>
       </v-main>
 
       <router-view name="BottomNavBar"></router-view>
@@ -19,10 +21,14 @@
 </template>
 
 <script setup lang="ts">
+import PreLoader from "@/components/PreLoader.vue";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import store from "./store/store";
+import { onMounted } from "vue";
+import { onSnapshot, doc } from "firebase/firestore";
+import db from "./firebaseInit";
 
 const route = useRoute();
 const headerTitle = computed(() => {
@@ -31,21 +37,34 @@ const headerTitle = computed(() => {
   if (route.name === "Post") return "Post Job";
 });
 
-const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    store.dispatch('setCurrentUserDetails', user.uid)
-    console.log('Signed In')
-    // ...
-  } else {
-    console.log('Logged Out')
-  }
-  
-});
+onMounted(() => {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      store.state.bodyPreLoader = true;
+      try {
+        onSnapshot(doc(db, "users", user.uid), (doc: any) => {
+          let data = { ...doc.data(), userId: user.uid };
+          console.log(user.email, user.uid);
+          store.commit("setCurrentUserDetails", data);
+          store.state.bodyPreLoader = false;
 
+          store.dispatch("getShortlistedEmployees");
+          store.dispatch("getContactedEmployees");
+          store.dispatch("getInterviewingEmployees");
+          store.dispatch("getHiredEmployees");
+        });
+      } catch (error) {
+        store.state.bodyPreLoader = false;
+      }
+    } else {
+      console.log("Logged Out");
+    }
+  });
+});
 </script>
 
-<style>
+<style lang="scss">
 .introduction,
 .reset-confirm,
 .sign-in,
@@ -66,14 +85,22 @@ onAuthStateChanged(auth, (user) => {
 }
 
 .main-container {
-  padding-bottom: 0px !important;
-  padding-top: 0px !important;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 .main-view {
   animation: animate 0.3s linear;
+}
+
+.body-pre-loader {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
 }
 
 @keyframes animate {

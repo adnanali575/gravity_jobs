@@ -20,8 +20,8 @@
 
       <RightMenu />
       <span class="search-btn-icon">
-      <PostBtn color="black" variant="outlined" class="post-btn mx-2"/>
-        <v-btn icon="" @click="searchBarToggle">
+        <PostBtn color="black" variant="text" class="post-btn mx-2" />
+        <v-btn color="primary" class="search-toggle-btn" icon="" @click="searchBarToggle">
           <img src="@/assets/icons/search_black.svg" alt="" />
         </v-btn>
       </span>
@@ -33,54 +33,78 @@
 import RightMenu from "./RightMenu.vue";
 import SearchBar from "./SearchBar.vue";
 import PostBtn from "./PostBtn.vue";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
+import store from "@/store/store";
 
 let searchBarTranslation = ref(false);
 
+watch(
+  () => store.state.employeesInfo,
+  (value) => {
+    searchBarTranslation.value = false;
+  }
+);
+
 const searchBarToggle = () => {
-  searchBarTranslation.value = !searchBarTranslation.value
+  searchBarTranslation.value = !searchBarTranslation.value;
 };
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
 .v-app-bar {
   height: 104px;
   box-shadow: $shadow;
+
+  .header-logo {
+    display: none;
+
+    img{
+      height: 38px;
+    }
+  }
+
+  .src-bar {
+    border-radius: 40px;
+  }
+
+  .src-bar-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-heading {
+    padding: 0px 20px;
+    width: 100%;
+    display: none;
+  }
+
+  .search-btn-icon {
+    display: flex;
+    align-items: center;
+    .post-btn {
+      display: none;
+    }
+
+    .search-toggle-btn {
+      display: none;
+    }
+  }
 }
 
-.header-logo {
-  display: none !important;
-}
-
-.src-bar {
-  border-radius: 40px;
-}
-
-.src-bar-box {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.search-heading {
-  padding: 0px 20px;
-  width: 100%;
-  display: none;
-}
-
-.search-btn-icon {
-  display: none;
-
-  .post-btn{
-    width: 35px;
-    height: 35px !important;
+@media (max-width: 1280px) {
+  .search-btn-icon {
+    .post-btn {
+      display: flex !important;
+    }
   }
 }
 
 @media (max-width: 959px) {
   .v-app-bar {
     overflow: unset;
+    height: 67px;
   }
   .header-logo {
     display: block !important;
@@ -90,19 +114,22 @@ const searchBarToggle = () => {
     display: flex;
   }
 
+  .search-btn-icon {
+    .search-toggle-btn {
+      display: flex !important;
+    }
+  }
+
   .src-bar-box {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
-    top: 110px;
+    top: 72px;
     left: 0px;
     transform: translateX(-100%);
     transition: all 0.5s ease-in-out;
-  }
-  .search-btn-icon {
-    display: block;
   }
 
   .src-bar--translate {

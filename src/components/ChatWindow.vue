@@ -2,69 +2,51 @@
   <div class="right">
     <div class="profile-bar">
       <v-sheet height="100%" class="d-flex align-center">
-        <v-btn icon="" flat router class="mx-4" to="/profile">
-          <v-avatar class="profile-avatar mx-4">
-            <img
-              src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-            />
-          </v-avatar>
-        </v-btn>
-        <p class="name-heading">Jean Besson-Perrier</p>
+        <v-avatar class="profile-avatar mx-4">
+          <img :src="chatUser.imageUrl" />
+        </v-avatar>
+        <p class="name-heading">
+          {{ chatUser.firstName }} {{ chatUser.lastName }}
+        </p>
         <v-spacer></v-spacer>
-        <slot name="show-list"></slot>
+        <v-btn
+          class="chat-list-toggle mx-3"
+          icon="mdi-format-list-bulleted"
+          density="comfortable"
+          flat
+          @click="toggleList"
+        ></v-btn>
       </v-sheet>
       <v-divider></v-divider>
     </div>
 
     <div class="chat-section">
-      <v-sheet class="chat-info my-4 d-flex" v-for="i in 1" :key="i">
-        <v-avatar class="profile-avatar me-4">
-          <img
-            src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-          />
-        </v-avatar>
-        <div>
-          <span class="d-flex my-1">
-            <p class="name">Jean Durand</p>
-            <p class="ms-5">12:45</p>
-          </span>
-          <p class="decscription">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.Consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.
-          </p>
-        </div>
-      </v-sheet>
-
-      <v-sheet class="my-2">
+      <v-sheet class="my-2" v-if="false">
         <v-divider></v-divider>
         <div class="date-text d-flex justify-center">
           <p class="px-5 bg-white text-center">11 Jan</p>
         </div>
       </v-sheet>
 
-      <v-sheet class="chat-info my-4 d-flex" v-for="i in 12" :key="i">
+      <v-sheet
+        class="chat-info mx-auto my-4 d-flex"
+        v-for="(message, index) in messages"
+        :key="index"
+      >
         <v-avatar class="profile-avatar me-4">
-          <img
-            src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-          />
+          <img :src="message.imageUrl" />
         </v-avatar>
         <div>
           <span class="d-flex my-1">
-            <p class="name">Jean Durand</p>
-            <p class="ms-5">12:45</p>
+            <p class="name">{{ userName(message.userName) }}</p>
+            <p class="date ms-5">
+              {{ hours(message.hours) }}:{{ minutes(message.minutes) }}
+              {{ period(message.hours) }}
+            </p>
           </span>
-          <p class="decscription">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.
+          <p class="desccription" :class="{ sender: sender(message.senderId) }">
+            {{ message.text }}
           </p>
-        </div>
-      </v-sheet>
-
-      <v-sheet class="my-2">
-        <v-divider></v-divider>
-        <div class="date-text d-flex justify-center">
-          <p class="px-5 bg-white text-center">12 Jan</p>
         </div>
       </v-sheet>
     </div>
@@ -73,41 +55,125 @@
       <div class="chat-box d-flex justify-space-between align-center">
         <WriteMessagePopUp />
         <v-sheet width="100%">
-          <BaseInput
+          <validationFreeInput
+            class="pe-13"
             v-model="messageText"
             placeholder="Write your message...."
             @keypress.enter="sendMessage"
           />
         </v-sheet>
-        <v-btn flat icon="mdi-send" @click="sendMessage" class="send-btn" color="primary"></v-btn>
+        <v-btn
+          flat
+          icon="mdi-send"
+          @click="sendMessage"
+          class="send-btn"
+          color="primary"
+        ></v-btn>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import BaseInput from "@/components/BaseInput.vue";
+import validationFreeInput from "@/components/validationFreeInput.vue";
 import WriteMessagePopUp from "./WriteMessagePopUp.vue";
 import { ref } from "vue";
+import store from "@/store/store";
+import { computed } from "@vue/reactivity";
+import { useRoute } from "vue-router";
+import { onMounted, watch } from "vue";
+
+const route = useRoute();
 
 let messageText = ref("");
 
-const sendMessage = ()=>{
-}
+let toggleList = () => {
+  store.state.chats = !store.state.chats;
+};
+
+const sendMessage = () => {
+  if (messageText.value) {
+    let recieverId = ref<string | string[]>();
+    recieverId.value = route.params.id;
+    store.dispatch("sendMessage", {
+      text: messageText.value,
+      recieverId: recieverId.value,
+    });
+    messageText.value = "";
+  }
+};
+
+onMounted(() => {
+  let recieverId = route.params.id;
+  store.dispatch("getMessages", recieverId);
+});
+
+watch(
+  () => route.params.id,
+  (id) => {
+    store.dispatch("getMessages", id);
+  }
+);
+
+const chatUser = computed(() => {
+  return store.state.chatUser;
+});
+
+const messages = computed(() => {
+  return store.state.messages;
+});
+
+const userName = (name: string) => {
+  let userName = `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`;
+
+  if (name === userName) return "You";
+  else return name;
+};
+
+const sender = (senderId: string) => {
+  if (senderId === store.state.currentUserDetails.userId) return true;
+  else return false;
+};
+
+const period = (hours: number) => {
+  if (hours > 12) return "PM";
+  else return "AM";
+};
+
+const hours = (hours: number) => {
+  let h: number = hours;
+  if (h > 12) h = hours - 12;
+  if (h < 10) return "0" + h.toString();
+  else return h;
+};
+
+const minutes = (minutes: number) => {
+  if (minutes < 10) return "0" + minutes.toString();
+  else return minutes.toString();
+};
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import "@/scss/variables";
+
+.sender {
+  background-color: $primary !important;
+  color: $white !important;
+}
+
 .right {
   overflow: hidden;
   width: 100%;
   z-index: 1;
   display: grid;
-  grid-template-rows: 80px 1fr 80px;
+  grid-template-rows: 72px 1fr 80px;
 
   .profile-bar {
     width: 100%;
-    height: 80px;
+  }
+
+  .chat-list-toggle {
+    display: none;
   }
 
   .name-heading {
@@ -119,10 +185,14 @@ const sendMessage = ()=>{
   .chat-section {
     background-color: $white;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 20px 20px;
     display: flex;
     flex-direction: column-reverse;
+  }
+
+  .chat-section:hover{
+    overflow-y: auto;
   }
 
   .name {
@@ -131,17 +201,28 @@ const sendMessage = ()=>{
     line-height: 28px;
   }
 
-  .decscription {
+  .desccription {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 7px 100%, 7px 7px);
     font-weight: 400;
     font-size: 14px;
+    width: fit-content;
     line-height: 24px;
-    background-color: $background;
-    padding: 10px;
-    border-radius: 15px;
+    background-color: $input-background;
+    color: $label-primary;
+    padding: 7px 10px 7px 20px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 
   .profile-avatar img {
     height: 100%;
+  }
+
+  .date {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
   }
 
   .date-text {
@@ -152,8 +233,14 @@ const sendMessage = ()=>{
     }
   }
 
+  .chat-info {
+    width: 100%;
+    max-width: 1000px;
+  }
+
   .chat-box {
     width: 100%;
+    max-width: 1000px;
   }
 
   .chat-bar {
@@ -164,9 +251,20 @@ const sendMessage = ()=>{
     align-items: center;
 
     .send-btn {
-      margin-left: -53px;
-      margin-top: -3px;
+      margin-left: -46px;
+      height: 40px !important;
+      width: 40px;
     }
+  }
+}
+
+@media (max-width: 900px) {
+  .chat-list-toggle {
+    display: flex !important;
+  }
+
+  .right {
+    grid-template-rows: 65px 1fr 80px;
   }
 }
 </style>

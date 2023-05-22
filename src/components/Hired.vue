@@ -1,8 +1,16 @@
 <template>
   <div class="px-0 pb-4 px-sm-4 px-md-8">
-    <v-row class="card-box" flat no-gutters>
+    <ConfirmationAlert :show="true">
+      <template #confirmBtn>
+        <BaseButton height="39px" @click="terminateEmployee" variant="flat" title="Confirm" />
+      </template>
+    </ConfirmationAlert>
+    <div v-if="hiredEmployees.length==0 && !hireLoader" class="empty">
+      <p>Not yet hired</p>
+    </div>
+    <PreLoader v-if="hireLoader"></PreLoader>
+    <v-row v-if="hiredEmployees.length > 0" class="card-box" flat no-gutters>
       <v-col
-        class=""
         v-for="(employee, index) in hiredEmployees"
         :key="index"
         xs="12"
@@ -19,15 +27,22 @@
 
 <script setup lang="ts">
 import EmployeeCard from "./EmployeeCard.vue";
-import { onMounted } from "vue";
+import ConfirmationAlert from "./ConfirmationAlert.vue";
+import BaseButton from "./BaseButton.vue";
+import PreLoader from "./PreLoader.vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
-
-onMounted(() => {
-  store.dispatch("getHiredEmployees", "hired");
-});
 
 let hiredEmployees = computed(() => {
   return store.state.hiredEmployees;
 });
+
+const terminateEmployee = ()=>{
+  store.state.confirmTermination = false
+  store.dispatch("terminateEmployees", store.state.employeeToTerminate);
+}
+
+const hireLoader = computed(()=>{
+  return store.state.hireLoader
+})
 </script>

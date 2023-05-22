@@ -1,8 +1,11 @@
 <template>
   <div class="px-0 pb-4 px-sm-4 px-md-8">
-    <v-row class="card-box" flat no-gutters>
+    <div v-if="interviewingEmployees.length==0 && !interviewLoader" class="empty">
+      <p>Not yet selected for interview</p>
+    </div>
+    <PreLoader v-if="interviewLoader"></PreLoader>
+    <v-row v-if="interviewingEmployees.length > 0" class="card-box" flat no-gutters>
       <v-col
-        class=""
         v-for="(employee, index) in interviewingEmployees"
         :key="index"
         xs="12"
@@ -19,15 +22,16 @@
 
 <script setup lang="ts">
 import EmployeeCard from "./EmployeeCard.vue";
-import { onMounted } from "vue";
 import store from "@/store/store";
+import PreLoader from "./PreLoader.vue";
 import { computed } from "@vue/reactivity";
 
-onMounted(() => {
-  store.dispatch("getInterviewingEmployees", "interview");
-});
 
 let interviewingEmployees = computed(() => {
   return store.state.interviewingEmployees;
 });
+
+const interviewLoader = computed(()=>{
+  return store.state.interviewLoader
+})
 </script>

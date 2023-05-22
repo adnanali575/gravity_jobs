@@ -3,45 +3,50 @@
     <div id="search-bar" class="search-bar">
       <slot name="heading"></slot>
       <div class="inputs-box">
-        <v-row no-gutters>
-          <v-col cols="12" md="4">
+        <VRow no-gutters>
+          <VCol cols="12" md="4">
             <SelectDropDown
-              v-model="stacks"
+              v-model="stacksValue"
               label="Stacks Used"
               :multiple="true"
               :dropDownItems="stacksList"
             >
+              <template #controls>
+                <BaseButton title="Clear" variant="text" />
+              </template>
             </SelectDropDown>
-          </v-col>
+          </VCol>
 
-          <v-divider vertical></v-divider>
+          <VDivider class="select-box-divider" vertical></VDivider>
 
-          <v-col cols="12" md="4">
-            <SelectDropDown
-              v-model="location"
+          <VCol cols="12" md="4">
+            <SelectDropDown v-model="locationValue"
               label="Location"
               :multiple="false"
               :dropDownItems="locationsList"
             />
-          </v-col>
+          </VCol>
 
-          <v-divider vertical></v-divider>
-          <v-col cols="12" md="4">
-            <SelectDropDown
-              v-model="seniority"
+          <VDivider class="select-box-divider" vertical></VDivider>
+          <VCol cols="12" md="4">
+            <SelectDropDown v-model="seniorityValue"
               label="Seniority"
               :multiple="true"
               :dropDownItems="seniorityList"
             >
+            <template #controls="test">
+                <BaseButton @click="clearStacks" title="Clear" variant="text" />
+              </template>
             </SelectDropDown>
-          </v-col>
-        </v-row>
+          </VCol>
+        </VRow>
       </div>
 
-      <v-btn class="bg-primary mx-1" @click="search" flat icon="">
-        <img src="@/assets/icons/Search.svg" alt="" />
+      <v-btn :loading="store.state.searchLoader" class="search-btn bg-primary mx-1" @click="search" flat icon="">
+        <img src="@/assets/icons/Search_white.svg" alt="" />
         <p class="search-btn-text text-capitalize ml-3">Search</p>
       </v-btn>
+      <slot name="postBtn"></slot>
     </div>
   </div>
 </template>
@@ -49,7 +54,8 @@
 <script setup lang="ts">
 import store from "@/store/store";
 import SelectDropDown from "./SelectDropDown.vue";
-import { computed, ref } from "@vue/reactivity";
+import BaseButton from "./BaseButton.vue";
+import { ref} from "vue";
 
 let stacksList = ref<string[]>(["Vue js", "React", "Angular", "jQuery"]);
 let locationsList = ref<string[]>([
@@ -60,17 +66,25 @@ let locationsList = ref<string[]>([
 ]);
 let seniorityList = ref<string[]>(["Junior", "Senior", "Lead", "CTO"]);
 
-let stacks = ref([]);
-let location = ref([]);
-let seniority = ref([]);
+let stacksValue = ref([]);
+let locationValue = ref('');
+let seniorityValue = ref([]);
 
-// For later use ....
-// console.log('First ----- ', JSON.parse(JSON.stringify(controls.value)))
-
-const search = () => {
+const clearStacks = () => {
+  stacksValue = ref([])
 };
 
-store.dispatch("getData");
+const search = () => {
+  const stacks = Array.from(stacksValue.value);
+  const location = locationValue.value
+  const seniority = Array.from(seniorityValue.value);
+
+  store.dispatch("getCandidatesDataByQuerySearch", {
+    stacks: stacks,
+    location: location,
+    seniority: seniority,
+  });
+};
 </script>
 
 <style lang="scss">
@@ -129,7 +143,7 @@ store.dispatch("getData");
       border-radius: 40px;
     }
 
-    .v-divider {
+    .select-box-divider {
       display: none;
     }
 
@@ -154,7 +168,10 @@ store.dispatch("getData");
       border-radius: 40px;
       width: 100%;
       height: 58px !important;
-      margin: 24px 0px;
+    }
+
+    .search-btn{
+      margin: 15px 0px;
     }
   }
 }

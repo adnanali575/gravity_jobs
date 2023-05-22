@@ -8,10 +8,14 @@
         </p>
         <div class="search-control">
           <SearchBar class="search-bar" >
-            <template>
+            <template #postBtn>
             </template>
-            <PostBtn class="post-btn" />
           </SearchBar>
+          <div class="search-options">
+            <v-divider class="option-divider"></v-divider>
+            <p>OR</p>
+          </div>
+          <PostBtn color="white" class="post-btn" />
         </div>
       </div>
     </div>
@@ -70,6 +74,18 @@ import PostBtn from "@/components/PostBtn.vue";
   }
 }
 
+.search-options{
+  width: 80%;
+  display: none;
+  flex-direction: column;
+  margin-top: 12px;
+  
+  p{
+    margin-top: -12px;
+    text-align: center;
+  }
+}
+
 .search-bar {
   margin: 46px 0px;
 }
@@ -79,6 +95,10 @@ import PostBtn from "@/components/PostBtn.vue";
     margin: 0px;
     padding: 0px;
   }
+  
+      .search-options{
+        display: flex;
+      }
 
   .background {
     flex-direction: column;
@@ -93,7 +113,7 @@ import PostBtn from "@/components/PostBtn.vue";
     justify-content: flex-end;
   }
 
-  .search-control {
+  .search-control, .post-btn {
     width: 80%;
     flex-direction: column;
   }

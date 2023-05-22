@@ -2,41 +2,58 @@
   <div class="left" id="list">
     <div class="search-bar-menu bg-white">
       <div class="search-field d-flex align-center justify-space-between">
-        <span class="text-field-box">
-          <v-text-field
-            class="bg-input-background rounded-pill"
-            variant="outlined"
-            placeholder="Search inbox"
-            append-inner-icon="mdi-magnify"
-            @click:append-inner="OnClick"
-          ></v-text-field>
-        </span>
+        <v-btn icon="" class="search-btn bg-input-background" flat>
+          <img src="@/assets/icons/search.svg" alt="" />
+        </v-btn>
+        <validationFreeInput
+          class="ps-11"
+          v-model="searchText"
+          placeholder="Search Inbox"
+        />
         <slot name="close-list"></slot>
       </div>
     </div>
 
-    <v-divider class="divider"></v-divider>
-
     <div class="list">
-      <v-list>
-        <div v-for="(i, index) in 20" :key="index">
-          <v-list-item @click="" class="chat-item" :value="i">
+      <v-divider class="divider"></v-divider>
+      <v-list class="py-0">
+        <PreLoader v-if="chatListLoader" class="chat-list-pre-loader" />
+        <p
+          v-if="!chatListLoader && chatUsers.length == 0"
+          class="pa-5 text-center"
+        >
+          No User Yet..
+        </p>
+        <div
+          v-if="!chatListLoader && chatUsers.length > 0"
+          v-for="(user, index) in filteredChatUsers"
+          :key="index"
+          @click="openChat"
+        >
+          <v-list-item
+            class="chat-item"
+            :value="user.userId"
+            exact
+            router
+            :to="'/chat/' + user.userId"
+          >
             <v-sheet class="py-2 d-flex">
               <v-avatar class="profile-avatar me-4">
-                <img
-                  src="https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"
-                />
+                <img :src="user.imageUrl" />
               </v-avatar>
 
               <div class="inner-content">
                 <div class="d-flex justify-space-between">
-                  <b class="heading">Jean Besson-Perrier</b>
-                  <p>12:45</p>
+                  <b class="heading"
+                    >{{ user.firstName }} {{ user.lastName }}</b
+                  >
+                  <p v-if="user.minutes && user.hours">
+                    {{ hours(user.hours) }}:{{ minutes(user.minutes) }}
+                    {{ period(user.hours) }}
+                  </p>
                 </div>
                 <div class="text d-flex align-center">
-                  <p>
-                    Hello Jean Besson-Perrier, I’m looking for a CTO...
-                  </p>
+                  <p>{{ lastMessage(user.lastMessage) }}</p>
                   <v-badge
                     v-if="false"
                     class="me-1"
@@ -55,22 +72,97 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import validationFreeInput from "./validationFreeInput.vue";
+import PreLoader from "./PreLoader.vue";
+import store from "@/store/store";
+import type { ChatUser } from "@/types";
+import { computed, ref } from "vue";
 
-let searchText = ref<string>("");
+let searchText = ref("");
 
-let OnClick = () => {};
+
+const filteredChatUsers = computed(() => {
+  const searchQuery = searchText.value.toLowerCase().trim();
+  let sortedUsers = chatUsers.value.slice();
+  
+  if (searchQuery) {
+    sortedUsers = sortedUsers.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      return fullName.includes(searchQuery);
+    });
+  }
+
+  sortedUsers.sort((a, b) => {
+    const timeA = getTimeValue(a.hours, a.minutes);
+    const timeB = getTimeValue(b.hours, b.minutes);
+    return timeB - timeA;
+  });
+
+  return sortedUsers;
+});
+
+const getTimeValue = (hours: number, minutes: number) => {
+  return hours * 60 + minutes;
+};
+
+const openChat = () => {
+  store.state.chats = !store.state.chats;
+};
+let chatUsers = computed(() => {
+  let data = store.state.chatUsers;
+  let uniqueObjects: ChatUser[] = [];
+  let ids: any[] = [];
+  data.forEach((obj) => {
+    if (!ids.includes(obj.userId)) {
+      uniqueObjects.push(obj);
+      ids.push(obj.userId);
+    }
+  });
+  return uniqueObjects;
+});
+
+const chatListLoader = computed(() => {
+  return store.state.chatListLoader;
+});
+
+const hours = (hours: number) => {
+  let h: number = hours;
+  if (h > 12) h = hours - 12;
+  if (h < 10) return "0" + h.toString();
+  else return h;
+};
+
+const minutes = (minutes: number) => {
+  if (minutes < 10) return "0" + minutes?.toString();
+  else return minutes?.toString();
+};
+
+const period = (hours: number) => {
+  if (hours > 12) return "PM";
+  else return "AM";
+};
+
+const lastMessage = (message: string) => {
+  if (message) {
+    if (message.length > 20) return message.slice(0, 26) + "......";
+    else return message;
+  } else return "";
+};
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/_variables';
+@import "@/scss/_variables";
+
+.chat-list-pre-loader {
+  width: 200px;
+}
 
 .left {
   width: 500px;
   display: grid;
-  grid-template-rows: 80px 1fr;
+  grid-template-rows: 72px 1fr;
 
-  .divider{
+  .divider {
     opacity: 1;
     color: $divider-color;
   }
@@ -79,10 +171,19 @@ let OnClick = () => {};
 .search-bar-menu {
   padding: 0px 20px;
   width: 100%;
+
+  .search-btn {
+    margin-right: -48px;
+  }
 }
 
 .list {
   overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: $white;
+}
+
+.list:hover{
   overflow-y: auto;
 }
 
@@ -98,9 +199,11 @@ let OnClick = () => {};
   background-color: $white;
 }
 
-.text-field-box {
-  height: 56px;
+.search-field-box {
+  height: 48px;
   width: 100%;
+  background: $input-background;
+  border-radius: 40px;
 }
 
 .text {
@@ -121,6 +224,10 @@ let OnClick = () => {};
 .profile-avatar {
   width: 64px;
   height: 64px;
+
+  img {
+    height: auto;
+  }
 }
 
 .profile-avatar img {
@@ -132,7 +239,7 @@ let OnClick = () => {};
 }
 
 @media (max-width: 900px) {
-  .text-field-box {
+  .search-field-box {
     width: 85% !important;
   }
 }
