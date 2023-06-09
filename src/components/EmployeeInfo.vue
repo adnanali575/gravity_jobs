@@ -45,7 +45,7 @@
         <v-list-item>
           <div class="d-flex px-4 pb-4">
             <v-avatar>
-              <img src="@/assets/images/education_profile logo.png" />
+              <img src="@/assets/images/education_profile_logo.png" />
             </v-avatar>
 
             <v-sheet width="100%" class="ms-4">

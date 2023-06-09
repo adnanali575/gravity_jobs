@@ -54,7 +54,7 @@
     <div class="chat-bar px-8">
       <div class="chat-box d-flex justify-space-between align-center">
         <WriteMessagePopUp />
-        <v-sheet width="100%">
+        <v-sheet class="bg-background" width="100%">
           <validationFreeInput
             class="pe-13"
             v-model="messageText"
@@ -77,6 +77,7 @@
 <script setup lang="ts">
 import validationFreeInput from "@/components/validationFreeInput.vue";
 import WriteMessagePopUp from "./WriteMessagePopUp.vue";
+import { hours, minutes, period } from "@/functions";
 import { ref } from "vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
@@ -133,23 +134,6 @@ const userName = (name: string) => {
 const sender = (senderId: string) => {
   if (senderId === store.state.currentUserDetails.userId) return true;
   else return false;
-};
-
-const period = (hours: number) => {
-  if (hours > 12) return "PM";
-  else return "AM";
-};
-
-const hours = (hours: number) => {
-  let h: number = hours;
-  if (h > 12) h = hours - 12;
-  if (h < 10) return "0" + h.toString();
-  else return h;
-};
-
-const minutes = (minutes: number) => {
-  if (minutes < 10) return "0" + minutes.toString();
-  else return minutes.toString();
 };
 </script>
 
@@ -216,7 +200,7 @@ const minutes = (minutes: number) => {
   }
 
   .profile-avatar img {
-    height: 100%;
+    width: 100%;
   }
 
   .date {
@@ -239,12 +223,13 @@ const minutes = (minutes: number) => {
   }
 
   .chat-box {
+    background-color: $background ;
     width: 100%;
     max-width: 1000px;
   }
 
   .chat-bar {
-    background-color: $white;
+    background-color: $background;
     box-shadow: $shadow;
     display: flex;
     justify-content: center;

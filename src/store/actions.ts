@@ -18,33 +18,45 @@ import { auth } from "@/firebaseInit";
 import router from "@/router/router";
 import db from "@/firebaseInit";
 import type { Commit } from "vuex";
-import type { State, UserDetails, JobPostingObject } from "@/types";
+import type {
+  State,
+  UserDetails,
+  JobPostingObject,
+  Notifications,
+} from "@/types";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
 
 export default {
   // Sign up ------------------------
-  signUp: ({ state }: { state: State }, payload: UserDetails) => {
-    state.signUpLoader = true;
-    console.log(payload);
-    createUserWithEmailAndPassword(auth, payload.email, payload.password)
-      .then((credential) => {
-        if (credential.user.uid) {
-          console.log(payload);
-          setDoc(doc(db, "users", credential.user.uid), payload).then(() => {
-            state.signUpLoader = false;
-            router.push("/");
-          });
-        }
-      })
-      .catch((error) => {
+  signUp: async ({ state }: { state: State }, payload: UserDetails) => {
+    try {
+      let credential = await createUserWithEmailAndPassword(
+        auth,
+        payload.email,
+        payload.password
+      );
+      router.push("/");
+      try {
+        payload.userId = credential.user.uid;
+        let response = await setDoc(doc(db, "users", credential.user.uid), {
+          ...payload,
+        });
         state.signUpLoader = false;
+      } catch (error: any) {
         console.log(error);
-      });
+        state.error = true;
+        state.errorMessage = error.code;
+      }
+    } catch (error: any) {
+      state.errorMessage = error.code;
+      state.error = true;
+      state.signUpLoader = false;
+      console.log(error);
+    }
   },
 
   // Sign in ------------------------
@@ -58,17 +70,20 @@ export default {
         router.push("/");
         state.signInLoader = false;
       })
-      .catch((error) => {
+      .catch((error: any) => {
         state.signInLoader = false;
+        state.errorMessage = error.code;
+        state.error = true;
       });
   },
 
   // User Sign Out -------------------------
 
-  signOut: () => {
+  signOut: ({ state }: { state: State }) => {
     signOut(auth)
       .then(() => {
         router.push("/sign-in");
+        state.currentUserDetails = {} as UserDetails;
       })
       .catch((error) => {
         alert("New there may some problems....");
@@ -86,14 +101,16 @@ export default {
       })
       .catch((error: any) => {
         state.forgotPasswordLoader = false;
+        state.errorMessage = "Invalid Email or Network Problem";
+        state.error = true;
       });
   },
 
   // Update Profile of Current User -------------------------
   updateProfile: ({ state }: { state: State }, payload: UserDetails) => {
+    console.log(payload);
     const docRef = db.collection("users").doc(payload.userId);
 
-    state.accountUpdateLoader = true;
     docRef
       .update(payload)
       .then(() => {
@@ -104,7 +121,7 @@ export default {
       });
   },
 
-  // Get Conditates Data By Query Search Data ------------------------
+  // Get Conditates Data ------------------------
   getCandidatesData: ({ commit, state }: { commit: Commit; state: State }) => {
     try {
       state.searchLoader = true;
@@ -135,6 +152,7 @@ export default {
   ) => {
     try {
       state.searchLoader = true;
+      state.searchBarLoader = true;
       db.collection("jobs")
         .where("stacks", "array-contains-any", payload.stacks)
         .where("location", "==", payload.location)
@@ -149,21 +167,27 @@ export default {
             router.push("/search");
           });
           state.searchLoader = false;
+          state.searchBarLoader = false;
         });
     } catch (error: any) {
       state.searchLoader = false;
+      state.searchBarLoader = false;
     }
   },
 
   // ----------------------------------------------------------------------------------------
 
   // Post Condidate Details for job ------------------------
-  postJob: ({ state }: { state: any }, payload: JobPostingObject) => {
-    addDoc(collection(db, "jobs"), payload)
-      .then(() => {
-        router.push("/submitted");
-      })
-      .catch(() => {});
+  postJob: async ({ state }: { state: any }, payload: JobPostingObject) => {
+    try {
+      let response = await addDoc(collection(db, "jobs"), payload);
+
+      console.log("data--", response);
+      router.push("/submitted");
+    } catch (error) {
+      console.log(error);
+      state.error = true;
+    }
   },
 
   // adding functions ---------------------------------------------
@@ -172,15 +196,41 @@ export default {
     { state }: { state: State },
     payload: JobPostingObject
   ) => {
-    let id = state.currentUserDetails.userId;
+    let user = state.currentUserDetails;
+    const userName = `${user.firstName} ${user.lastName}`;
 
     let obj = state.employeesInfo.find((el) => el.userId == payload.userId);
     if (obj) obj.loading = true;
 
-    const messagesRef = collection(db, "users/" + id + "/shortlisted");
-    addDoc(messagesRef, { ...payload })
+    const subColRef = collection(db, "users/" + user.userId + "/shortlisted");
+    addDoc(subColRef, { ...payload })
       .then(() => {
         if (obj) obj.loading = false;
+
+        const notificatonRef = collection(
+          db,
+          "users/" + payload.userId + "/notifications"
+        );
+        addDoc(notificatonRef, {
+          userName: userName,
+          imageUrl: user.imageUrl,
+          date: Timestamp.now(),
+          message: `You are Shortlisted`,
+        });
+
+        const documentRef = db.collection("users").doc(payload.userId);
+        documentRef
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              documentRef.update({
+                notificatonsSeen: false,
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error retrieving document:", error);
+          });
       })
       .catch((error: any) => {
         if (obj) obj.loading = false;
@@ -213,6 +263,8 @@ export default {
       (el) => el.userId == payload.userId
     );
 
+    let userName = `${currentUser.firstName} ${currentUser.lastName}`;
+
     try {
       if (obj) obj.loading = true;
 
@@ -239,6 +291,26 @@ export default {
             doc(db, "users", currentUser.userId, "chatUsers", payload.userId),
             condidate
           );
+
+          const notificatonRef = collection(
+            db,
+            "users/" + payload.userId + "/notifications"
+          );
+          addDoc(notificatonRef, {
+            userName: userName,
+            imageUrl: user.imageUrl,
+            date: Timestamp.now(),
+            message: `You are selected for Contact`,
+          });
+
+          const documentRef = db.collection("users").doc(payload.userId);
+          documentRef.get().then((doc) => {
+            if (doc.exists) {
+              documentRef.update({
+                notificatonsSeen: false,
+              });
+            }
+          });
         });
       });
     } catch (error: any) {
@@ -250,7 +322,9 @@ export default {
     { state }: { state: State },
     payload: JobPostingObject
   ) => {
-    let id = state.currentUserDetails.userId;
+    let user = state.currentUserDetails;
+    let id = user.userId;
+    let userName = `${user.firstName} ${user.lastName}`;
 
     let obj = state.contactedEmployees.find(
       (el) => el.userId == payload.userId
@@ -269,6 +343,26 @@ export default {
             state.cardButtonLoader = false;
             doc.ref.delete();
           });
+
+          const notificatonRef = collection(
+            db,
+            "users/" + payload.userId + "/notifications"
+          );
+          addDoc(notificatonRef, {
+            userName: userName,
+            imageUrl: user.imageUrl,
+            date: Timestamp.now(),
+            message: `You are selected for Interview`,
+          });
+
+          const documentRef = db.collection("users").doc(payload.userId);
+          documentRef.get().then((doc) => {
+            if (doc.exists) {
+              documentRef.update({
+                notificatonsSeen: false,
+              });
+            }
+          });
         });
       });
     } catch (error: any) {
@@ -279,7 +373,9 @@ export default {
 
   // Hire Conditates ------------------------
   hireEmployees: ({ state }: { state: State }, payload: JobPostingObject) => {
-    let id = state.currentUserDetails.userId;
+    let user = state.currentUserDetails;
+    let id = user.userId;
+    let userName = `${user.firstName} ${user.lastName}`;
 
     let obj = state.interviewingEmployees.find(
       (el) => el.userId == payload.userId
@@ -299,7 +395,28 @@ export default {
           snapshot.forEach((doc) => {
             doc.ref.delete();
           });
+
+          const notificatonRef = collection(
+            db,
+            "users/" + payload.userId + "/notifications"
+          );
+          addDoc(notificatonRef, {
+            userName: userName,
+            imageUrl: user.imageUrl,
+            date: Timestamp.now(),
+            message: `Congratulation you are Hired for job`,
+          });
+
+          const documentRef = db.collection("users").doc(payload.userId);
+          documentRef.get().then((doc) => {
+            if (doc.exists) {
+              documentRef.update({
+                notificatonsSeen: false,
+              });
+            }
+          });
         })
+
         .catch((error: any) => {
           if (obj) obj.loading = true;
         });
@@ -311,7 +428,9 @@ export default {
     { state }: { state: State },
     payload: JobPostingObject
   ) => {
-    let id = state.currentUserDetails.userId;
+    let user = state.currentUserDetails;
+    let id = user.userId;
+    let userName = `${user.firstName} ${user.lastName}`;
 
     let docId = ref("");
 
@@ -360,14 +479,93 @@ export default {
           .doc(id)
           .collection("chatUsers");
         const employeeColRef = employeeDocRef.doc(payload.userId);
-        employeeColRef.delete();
+        employeeColRef.delete().then(() => {
+          const notificatonRef = collection(
+            db,
+            "users/" + payload.userId + "/notifications"
+          );
+          addDoc(notificatonRef, {
+            userName: userName,
+            imageUrl: user.imageUrl,
+            date: Timestamp.now(),
+            message: `Oops! you are Terminated`,
+          });
+
+          const documentRef = db.collection("users").doc(payload.userId);
+          documentRef.get().then((doc) => {
+            if (doc.exists) {
+              documentRef.update({
+                notificatonsSeen: false,
+              });
+            }
+          });
+        });
       })
       .catch((error: any) => {
         if (obj) obj.loading = false;
       });
   },
 
+  // Seen Notifications
+  seenNotifications: ({ state }: { state: State }, payload: Notifications) => {
+    const id = state.currentUserDetails.userId;
+
+    const documentRef = db.collection("users").doc(id);
+    documentRef.get().then((doc) => {
+      if (doc.exists) {
+        documentRef.update({
+          notificatonsSeen: true,
+        });
+      }
+    });
+  },
+
+  // Get Notifications
+  deleteNotificatoin: ({ state }: { state: State }, payload: Notifications) => {
+    let user = state.currentUserDetails;
+    const parentDocRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(user.userId);
+
+    const subcollectionRef = parentDocRef.collection("notifications");
+    subcollectionRef.doc(payload.notiId).delete();
+  },
+
   // Get functions ---------------------------------------------
+
+  // Get Notifications
+
+  getNotifications: ({ commit, state }: { commit: Commit; state: State }) => {
+    let user = state.currentUserDetails;
+
+    try {
+      state.shortListLoader = true;
+
+      onSnapshot(
+        query(
+          collection(db, "users/" + user.userId + "/notifications"),
+          orderBy("date", "desc")
+        ),
+        (snapshot: any) => {
+          state.notifications = [];
+          snapshot.forEach((doc: any) => {
+            let data = { ...doc.data() };
+
+            let date = data.date.toDate();
+            data.notiId = doc.id;
+            data.minutes = date.getMinutes();
+            data.hours = date.getHours();
+
+            commit("setNotifications", data);
+          });
+          state.shortListLoader = false;
+        }
+      );
+    } catch (error: any) {
+      state.shortListLoader = false;
+    }
+  },
 
   // Get Shortlisted Conditates -------------------
   getShortlistedEmployees: ({
@@ -510,9 +708,8 @@ export default {
   // __________________________________________________________________________________
   // Get All the chat users
   getChatUsers: ({ commit, state }: { commit: Commit; state: State }) => {
-    const id = state.currentUserDetails.userId;
-
     try {
+      let id = state.currentUserDetails.userId;
       state.chatListLoader = true;
       onSnapshot(
         query(collection(db, "users/" + id + "/chatUsers")),
@@ -534,16 +731,14 @@ export default {
               data.date = lastChats.lastMessageTime;
               data.lastMessage = lastChats.lastMessage;
 
-              if (data.date || data.selectorId == id) {
+              state.chatListLoader = false;
+              if ((data.date && data.lastMessage) || data.selectorId === id) {
                 if (data.date) {
                   const timestamp = data.date.toDate();
                   data.hours = timestamp.getHours();
                   data.minutes = timestamp.getMinutes();
-                  commit("setChatUsers", data);
-                } else {
-                  commit("setChatUsers", data);
                 }
-                state.chatListLoader = false;
+                commit("setChatUsers", data);
               }
             });
           });

@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="profile-heading">
-      <h1>Profile</h1>
+      <h1>Application</h1>
     </div>
 
     <PreLoader v-if="profileLoader"></PreLoader>

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Search from "@/views/Search.vue";
 import ShortList from "@/views/ShortList.vue";
-import Shortlisted from "@/components/ShortListed.vue";
+// import Shortlisted from "@/components/ShortListed.vue";
 import Contacted from "@/components/contacted.vue";
 import Interviewing from "@/components/Interviewing.vue";
 import Hired from "@/components/Hired.vue";
@@ -24,9 +24,6 @@ import ShortListHeader from "@/components/ShortlistHeader.vue";
 import CustomHeader from "@/components/CustomHeader.vue";
 import BottomNavBar from "@/components/BottomBar.vue";
 import ChatWindow from "@/components/ChatWindow.vue";
-
-import { ref } from "vue";
-import store from "@/store/store";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({
@@ -71,7 +68,7 @@ const router = createRouter({
         BottomNavBar: BottomNavBar,
       },
       children: [
-        { path: "", name: "ShortListed", component: Shortlisted },
+        // { path: "", name: "ShortListed", component: Shortlisted },
         { path: "contacted", component: Contacted },
         { path: "interviewing", component: Interviewing },
         { path: "hired", component: Hired },

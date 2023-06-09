@@ -1,5 +1,6 @@
 <template>
   <div class="forgot-password">
+    <ErrorMessage/>
     <SignInForm>
       <template #form>
         <p class="instructions">
@@ -32,6 +33,7 @@
 <script setup lang="ts">
 import SignInForm from "@/components/SignInForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import store from "@/store/store";
 import { ref } from "vue";

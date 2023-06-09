@@ -42,7 +42,7 @@
         </VRow>
       </div>
 
-      <v-btn :loading="store.state.searchLoader" class="search-btn bg-primary mx-1" @click="search" flat icon="">
+      <v-btn :loading="store.state.searchBarLoader" class="search-btn bg-primary mx-1" @click="search" flat icon="">
         <img src="@/assets/icons/Search_white.svg" alt="" />
         <p class="search-btn-text text-capitalize ml-3">Search</p>
       </v-btn>

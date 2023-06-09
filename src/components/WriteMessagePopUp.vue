@@ -2,7 +2,7 @@
   <div>
     <v-dialog transition="dialog-top-transition" width="auto">
       <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" class="mx-2" flat icon="">
+        <v-btn v-bind="props" class="mx-2 bg-background" flat icon="">
           <img src="@/assets/icons/pencil_signature.svg" />
         </v-btn>
         <span> </span>

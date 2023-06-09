@@ -53,8 +53,9 @@ onMounted(() => {
           store.dispatch("getContactedEmployees");
           store.dispatch("getInterviewingEmployees");
           store.dispatch("getHiredEmployees");
+          store.dispatch('getNotifications')
         });
-      } catch (error) {
+    } catch (error) {
         store.state.bodyPreLoader = false;
       }
     } else {
@@ -101,6 +102,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
+  cursor: progress;
 }
 
 @keyframes animate {

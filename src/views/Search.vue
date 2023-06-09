@@ -39,7 +39,7 @@
       class="search-not-found d-flex justify-center align-center"
     >
       <div class="img-box d-flex flex-column">
-        <img src="@/assets/images/search_not found.png" alt="" />
+        <img src="@/assets/images/search_not_found.png" alt="" />
         <p>Sorry, try an other search</p>
       </div>
     </div>

@@ -21,13 +21,6 @@
                 variant="outlined"
               />
               <div>
-                <BaseButton
-                :loader="buttonLoader"
-                @click="update(userDetails)"
-                class="btn"
-                title="Update"
-                variant="flat"
-              />
               </div>
             </div>
           </template>
@@ -40,7 +33,6 @@
 <script setup lang="ts">
 import SignUpForm from "@/components/SignUpForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import type { SignUpObject } from "@/types";
 import { ref } from "vue";
 import store from "@/store/store";
 import { computed } from "@vue/reactivity";
@@ -57,25 +49,6 @@ const enableform = () => {
 
 const disableform = () => {
   formStatus.value = true;
-};
-
-const buttonLoader = computed(() => {
-  return store.state.accountUpdateLoader;
-});
-
-let update = (user: SignUpObject) => {
-  if (
-    user.firstName &&
-    user.lastName &&
-    user.companyName &&
-    user.role &&
-    user.noOfRecrutement &&
-    user.email &&
-    user.phone &&
-    user.password
-  ) {
-    store.dispatch("updateProfile", user);
-  }
 };
 </script>
 
@@ -115,11 +88,12 @@ let update = (user: SignUpObject) => {
 
 @media (max-width: 500px) {
   .account {
+    margin-top: 58px;
     padding: 0px 0px 56px 0px;
   }
 
   .account-form {
-    padding: 30px;
+    padding: 0px 30px 30px;
   }
 
   .btn-box {

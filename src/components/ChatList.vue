@@ -74,6 +74,8 @@
 <script setup lang="ts">
 import validationFreeInput from "./validationFreeInput.vue";
 import PreLoader from "./PreLoader.vue";
+
+import { hours, minutes, period } from "@/functions";
 import store from "@/store/store";
 import type { ChatUser } from "@/types";
 import { computed, ref } from "vue";
@@ -124,23 +126,6 @@ let chatUsers = computed(() => {
 const chatListLoader = computed(() => {
   return store.state.chatListLoader;
 });
-
-const hours = (hours: number) => {
-  let h: number = hours;
-  if (h > 12) h = hours - 12;
-  if (h < 10) return "0" + h.toString();
-  else return h;
-};
-
-const minutes = (minutes: number) => {
-  if (minutes < 10) return "0" + minutes?.toString();
-  else return minutes?.toString();
-};
-
-const period = (hours: number) => {
-  if (hours > 12) return "PM";
-  else return "AM";
-};
 
 const lastMessage = (message: string) => {
   if (message) {
@@ -231,7 +216,7 @@ const lastMessage = (message: string) => {
 }
 
 .profile-avatar img {
-  height: 100%;
+  width: 100%;
 }
 
 .inner-content {

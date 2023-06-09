@@ -1,5 +1,6 @@
 <template>
   <div class="sign-in">
+    <ErrorMessage></ErrorMessage>
     <SignInForm>
       <template #form>
         <div class="form-content bg-red">
@@ -64,6 +65,7 @@
 import SignInForm from "@/components/SignInForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 import store from "@/store/store";
 import { computed, ref } from "vue";
 
