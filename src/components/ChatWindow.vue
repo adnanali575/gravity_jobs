@@ -75,11 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import validationFreeInput from "@/components/validationFreeInput.vue";
+import validationFreeInput from "../components/validationFreeInput.vue";
 import WriteMessagePopUp from "./WriteMessagePopUp.vue";
-import { hours, minutes, period } from "@/functions";
+import { hours, minutes, period } from "../functions";
 import { ref } from "vue";
-import store from "@/store/store";
+import store from "../store/store";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import { onMounted, watch } from "vue";
@@ -138,7 +138,7 @@ const sender = (senderId: string) => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 
 .sender {
   background-color: $primary !important;

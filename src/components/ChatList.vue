@@ -3,7 +3,7 @@
     <div class="search-bar-menu bg-white">
       <div class="search-field d-flex align-center justify-space-between">
         <v-btn icon="" class="search-btn bg-input-background" flat>
-          <img src="@/assets/icons/search.svg" alt="" />
+          <img src="../assets/icons/search.svg" alt="" />
         </v-btn>
         <validationFreeInput
           class="ps-11"
@@ -75,9 +75,9 @@
 import validationFreeInput from "./validationFreeInput.vue";
 import PreLoader from "./PreLoader.vue";
 
-import { hours, minutes, period } from "@/functions";
-import store from "@/store/store";
-import type { ChatUser } from "@/types";
+import { hours, minutes, period } from "../functions";
+import store from "../store/store";
+import type { ChatUser } from "../types";
 import { computed, ref } from "vue";
 
 let searchText = ref("");
@@ -136,7 +136,7 @@ const lastMessage = (message: string) => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_variables";
+@import "../scss/_variables";
 
 .chat-list-pre-loader {
   width: 200px;

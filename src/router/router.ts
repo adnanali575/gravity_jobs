@@ -1,29 +1,29 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Search from "@/views/Search.vue";
-import ShortList from "@/views/ShortList.vue";
-// import Shortlisted from "@/components/ShortListed.vue";
-import Contacted from "@/components/contacted.vue";
-import Interviewing from "@/components/Interviewing.vue";
-import Hired from "@/components/Hired.vue";
-import Chat from "@/views/Chat.vue";
-import Profile from "@/views/Profile.vue";
-import Introduction from "@/views/Introduction.vue";
+import Search from "../views/Search.vue";
+import ShortList from "../views/ShortList.vue";
+// import Shortlisted from "../components/ShortListed.vue";
+import Contacted from "../components/contacted.vue";
+import Interviewing from "../components/Interviewing.vue";
+import Hired from "../components/Hired.vue";
+import Chat from "../views/Chat.vue";
+import Profile from "../views/Profile.vue";
+import Introduction from "../views/Introduction.vue";
 
-import SignIn from "@/views/SignIn.vue";
-import ForgotPassword from "@/views/ForgotPassword.vue";
-import ResetPassword from "@/views/ResetPassword.vue";
-import ResetConfirm from "@/views/ResetConfirm.vue";
-import SignUp from "@/views/SignUp.vue";
-import Account from "@/views/Account.vue";
-import Post from "@/views/post.vue";
-import FormSubmitted from '@/components/FormSubmitted.vue'
+import SignIn from "../views/SignIn.vue";
+import ForgotPassword from "../views/ForgotPassword.vue";
+import ResetPassword from "../views/ResetPassword.vue";
+import ResetConfirm from "../views/ResetConfirm.vue";
+import SignUp from "../views/SignUp.vue";
+import Account from "../views/Account.vue";
+import Post from "../views/post.vue";
+import FormSubmitted from '../components/FormSubmitted.vue'
 
-import SideBar from "@/components/SideBar.vue";
-import SearchHeader from "@/components/SearchHeader.vue";
-import ShortListHeader from "@/components/ShortlistHeader.vue";
-import CustomHeader from "@/components/CustomHeader.vue";
-import BottomNavBar from "@/components/BottomBar.vue";
-import ChatWindow from "@/components/ChatWindow.vue";
+import SideBar from "../components/SideBar.vue";
+import SearchHeader from "../components/SearchHeader.vue";
+import ShortListHeader from "../components/ShortlistHeader.vue";
+import CustomHeader from "../components/CustomHeader.vue";
+import BottomNavBar from "../components/BottomBar.vue";
+import ChatWindow from "../components/ChatWindow.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({

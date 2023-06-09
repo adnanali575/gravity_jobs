@@ -32,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import RightMenu from "@/components/RightMenu.vue";
-import store from "@/store/store";
+import RightMenu from "../components/RightMenu.vue";
+import store from "../store/store";
 import { computed } from "@vue/reactivity";
 
 let shortlisted = computed(() => {
@@ -65,7 +65,7 @@ let items = [
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .v-app-bar {
   height: 138px;
   box-shadow: $shadow;

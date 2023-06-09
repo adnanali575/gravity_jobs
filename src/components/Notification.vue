@@ -8,11 +8,11 @@
         value="notifications"
       >
         <div class="notifications">
-          <img class="bell-icon" src="@/assets/icons/notification_icon.svg" />
+          <img class="bell-icon" src="../assets/icons/notification_icon.svg" />
         <img
           class="not-seen-indication"
           v-if="!notificatonsSeen"
-          src="@/assets/icons/blue_dot.svg"
+          src="../assets/icons/blue_dot.svg"
           alt=""
         />
         </div>
@@ -63,9 +63,9 @@
 </template>
 
 <script setup lang="ts">
-import store from "@/store/store";
-import type { Notifications } from "@/types";
-import { hours, minutes, period } from "@/functions";
+import store from "../store/store";
+import type { Notifications } from "../types";
+import { hours, minutes, period } from "../functions";
 import { computed } from "@vue/reactivity";
 
 const notifications = computed(() => {

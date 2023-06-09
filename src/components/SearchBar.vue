@@ -43,7 +43,7 @@
       </div>
 
       <v-btn :loading="store.state.searchBarLoader" class="search-btn bg-primary mx-1" @click="search" flat icon="">
-        <img src="@/assets/icons/Search_white.svg" alt="" />
+        <img src="../assets/icons/Search_white.svg" alt="" />
         <p class="search-btn-text text-capitalize ml-3">Search</p>
       </v-btn>
       <slot name="postBtn"></slot>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import store from "@/store/store";
+import store from "../store/store";
 import SelectDropDown from "./SelectDropDown.vue";
 import BaseButton from "./BaseButton.vue";
 import { ref} from "vue";
@@ -88,7 +88,7 @@ const search = () => {
 </script>
 
 <style lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .search-bar {
   width: 832px;
   height: 56px;

@@ -14,16 +14,16 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "@/firebaseInit";
-import router from "@/router/router";
-import db from "@/firebaseInit";
+import { auth } from "../firebaseInit";
+import router from "../router/router";
+import db from "../firebaseInit";
 import type { Commit } from "vuex";
 import type {
   State,
   UserDetails,
   JobPostingObject,
   Notifications,
-} from "@/types";
+} from "../types";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";

@@ -32,12 +32,12 @@
 </template>
 
 <script setup lang="ts">
-import SignInForm from "@/components/SignInForm.vue";
-import BaseButton from "@/components/BaseButton.vue";
+import SignInForm from "../components/SignInForm.vue";
+import BaseButton from "../components/BaseButton.vue";
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import '../scss/variables';
 .instructions {
   margin: auto;
   width: 332px;

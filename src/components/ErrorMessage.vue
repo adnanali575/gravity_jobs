@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import store from "@/store/store";
+import store from "../store/store";
 import { watch } from "vue";
 import { computed } from "vue";
 
@@ -40,7 +40,7 @@ watch(
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 
 .error-alert {
   display: flex;

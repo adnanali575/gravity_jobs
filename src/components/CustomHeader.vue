@@ -19,7 +19,7 @@ const props = defineProps<{
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import '../scss/variables';
 .v-app-bar {
   display: grid;
   height: 104px;

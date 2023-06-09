@@ -39,7 +39,7 @@
       class="search-not-found d-flex justify-center align-center"
     >
       <div class="img-box d-flex flex-column">
-        <img src="@/assets/images/search_not_found.png" alt="" />
+        <img src="../assets/images/search_not_found.png" alt="" />
         <p>Sorry, try an other search</p>
       </div>
     </div>
@@ -47,11 +47,11 @@
 </template>
 
 <script setup lang="ts">
-import EmployeeCard from "@/components/EmployeeCard.vue";
-import PreLoader from "@/components/PreLoader.vue";
-import ConfirmationAlert from "@/components/ConfirmationAlert.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import store from "@/store/store";
+import EmployeeCard from "../components/EmployeeCard.vue";
+import PreLoader from "../components/PreLoader.vue";
+import ConfirmationAlert from "../components/ConfirmationAlert.vue";
+import BaseButton from "../components/BaseButton.vue";
+import store from "../store/store";
 import { computed } from "vue";
 
 store.dispatch("getCandidatesData");
@@ -71,7 +71,7 @@ const terminateEmployee = () => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .search-view {
   height: fit-content;
   padding: 138px 33px 0px 33px;

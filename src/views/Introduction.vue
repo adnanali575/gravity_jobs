@@ -1,7 +1,7 @@
 <template>
   <div class="introduction bg-background-menu">
     <div class="background">
-      <img class="logo ma-8" src="@/assets/icons/logo.svg" alt="" />
+      <img class="logo ma-8" src="../assets/icons/logo.svg" alt="" />
       <div class="inner-content">
         <p class="heading">
           Let’s begin, tell us what type of profile you are interested in!
@@ -23,12 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import SearchBar from "@/components/SearchBar.vue";
-import PostBtn from "@/components/PostBtn.vue";
+import SearchBar from "../components/SearchBar.vue";
+import PostBtn from "../components/PostBtn.vue";
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import '../scss/variables';
 .introduction {
   height: 100vh;
 }
@@ -42,7 +42,7 @@ import PostBtn from "@/components/PostBtn.vue";
 
 .background {
   height: 100%;
-  background: url("@/assets/images/stars.png") center center fixed;
+  background: url("../assets/images/stars.png") center center fixed;
   display: flex;
   justify-content: center;
   align-items: center;

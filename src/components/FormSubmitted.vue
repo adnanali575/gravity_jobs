@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router/router";
+import router from "../router/router";
 import BaseButton from "./BaseButton.vue";
 
 const push = (path: string) => {

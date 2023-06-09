@@ -1,7 +1,7 @@
 <template>
   <div class="floating-message">
     <router-link to="/chat">
-      <img src="@/assets/icons/messenger_2.svg" />
+      <img src="../assets/icons/messenger_2.svg" />
     </router-link>
   </div>
 </template>

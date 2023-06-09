@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import PreLoader from "@/components/PreLoader.vue";
+import PreLoader from "./components/PreLoader.vue";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";

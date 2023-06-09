@@ -7,7 +7,7 @@
         <v-list-item>
           <div class="d-flex px-4 pb-4">
             <v-avatar>
-              <img src="@/assets/icons/experience_icon.svg" />
+              <img src="../assets/icons/experience_icon.svg" />
             </v-avatar>
             <v-sheet width="100%" class="ms-4">
               <p class="font-weight-black">{{ employee.experienceTitle }}</p>
@@ -18,7 +18,7 @@
                   <span class="d-flex align-start"
                     ><img
                       class="mr-2"
-                      src="@/assets/icons/small_calender_icon.svg"
+                      src="../assets/icons/small_calender_icon.svg"
                     />
                     <p class="small-text">
                      {{ employee.skillStartingMonth }}. {{ employee.skillStartingYear }} - Today . {{ currentYear(employee.skillStartingYear) }} years
@@ -28,7 +28,7 @@
                 <span class="location d-flex align-start">
                   <img
                     class="mr-2"
-                    src="@/assets/icons/small_location_icon.svg"
+                    src="../assets/icons/small_location_icon.svg"
                   />
                   <p class="small-text">{{ employee.experienceInSkillFrom }}</p>
                 </span>
@@ -45,7 +45,7 @@
         <v-list-item>
           <div class="d-flex px-4 pb-4">
             <v-avatar>
-              <img src="@/assets/images/education_profile_logo.png" />
+              <img src="../assets/images/education_profile_logo.png" />
             </v-avatar>
 
             <v-sheet width="100%" class="ms-4">
@@ -58,14 +58,14 @@
                 <span class="d-flex align-start"
                   ><img
                     class="mr-2"
-                    src="@/assets/icons/small_calender_icon.svg"
+                    src="../assets/icons/small_calender_icon.svg"
                   />
                   <p>{{ employee.passingMonth }}. {{ employee.passingYear }} - Today . {{ currentYear(employee.passingYear) }} years</p>
                 </span>
                 <span class="location d-flex align-start"
                   ><img
                     class="mr-2"
-                    src="@/assets/icons/small_location_icon.svg"
+                    src="../assets/icons/small_location_icon.svg"
                   />
                   <p>{{ employee.educatedFrom }}</p>
                 </span>
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EmployeesInfoTypes } from "@/types";
+import type { EmployeesInfoTypes } from "../types";
 
 const props = defineProps<{
   employee: EmployeesInfoTypes;
@@ -92,7 +92,7 @@ const currentYear = (year:any)=>{
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .small-text {
   font-weight: 400;
   font-size: 14px;

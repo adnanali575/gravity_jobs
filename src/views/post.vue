@@ -115,12 +115,12 @@
 </template>
 
 <script setup lang="ts">
-import BaseInput from "@/components/BaseInput.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import SelectDropDown from "@/components/SelectDropDown.vue";
-import ErrorMessage from "@/components/ErrorMessage.vue";
+import BaseInput from "../components/BaseInput.vue";
+import BaseButton from "../components/BaseButton.vue";
+import SelectDropDown from "../components/SelectDropDown.vue";
+import ErrorMessage from "../components/ErrorMessage.vue";
 import { ref as vueRef, type Ref, watch } from "vue";
-import store from "@/store/store";
+import store from "../store/store";
 
 const stacksList = ["Vue js", "React", "Angular", "jQuery"];
 let locationsList = ["Full-Remote", "Pakistan", "Iran", "United States"];

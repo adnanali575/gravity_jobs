@@ -53,7 +53,7 @@
               <v-sheet class="">
                 <p class="font-weight-medium">Last Activity</p>
                 <span class="d-flex justify-start align-center">
-                  <span><img src="@/assets/icons/github_2.svg" /></span>
+                  <span><img src="../assets/icons/github_2.svg" /></span>
                   <p class="ms-2">6 hours ago</p>
                 </span>
               </v-sheet>
@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import EmployeeControls from "./EmployeeControls.vue";
-import type { EmployeesInfoTypes } from "@/types";
+import type { EmployeesInfoTypes } from "../types";
 import { computed } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -108,7 +108,7 @@ const profilePage = computed(() => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .employee-card {
   filter: drop-shadow($shadow);
   width: 100%;
