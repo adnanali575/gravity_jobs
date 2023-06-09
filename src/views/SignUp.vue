@@ -1,5 +1,6 @@
 <template>
   <div class="sign-up">
+    <ErrorMessage></ErrorMessage>
     <SignInForm>
       <template #form>
         <div class="form-content">
@@ -29,9 +30,7 @@
 <script setup lang="ts">
 import SignUpForm from "@/components/SignUpForm.vue";
 import SignInForm from "@/components/SignInForm.vue";
-import store from "@/store/store";
-import type { SignUpObject } from "@/types";
-import { computed } from "vue";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 </script>
 
 <style scoped lang="scss">

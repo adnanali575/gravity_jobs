@@ -9,11 +9,12 @@ export type State = {
   usersDetails: Array<UserDetails>;
   messages: Array<Messages>;
   chatUsers: Array<ChatUser>;
+  notifications: Array<Notifications>;
   chatUser: object;
   employeeToTerminate: object;
   searchLoader: boolean;
+  searchBarLoader: boolean;
   success: boolean;
-  error: boolean;
   shortListLoader: boolean;
   contactLoader: boolean;
   interviewLoader: boolean;
@@ -26,12 +27,25 @@ export type State = {
   profileLoader: boolean;
   accountUpdateLoader: boolean;
   formSubmitted: boolean;
+  error: boolean;
+  errorMessage: string;
+};
+
+export type Notifications = {
+  date: Date;
+  imageUrl: string;
+  notiId: string;
+  message: string;
+  userName: string;
+  minutes: number;
+  hours: number;
 };
 
 export type SignUpObject = {
   firstName: string;
   lastName: string;
   companyName: string;
+  imageUrl: string;
   role: string;
   noOfRecrutement: string;
   email: string;
@@ -47,6 +61,7 @@ export type UserDetails = {
   companyName: string;
   role: string;
   noOfRecrutement: string;
+  notificatonsSeen: boolean;
   email: string;
   phone: string;
   password: string;
@@ -58,6 +73,7 @@ export type ChatUser = {
   firstName: string;
   imageUrl: string;
   lastMessage: string;
+  lastMessageTime: Date;
   lastName: string;
   hours: number;
   minutes: number;

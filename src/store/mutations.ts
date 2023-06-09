@@ -2,6 +2,7 @@ import type {
   ChatUser,
   EmployeesInfoTypes,
   Messages,
+  Notifications,
   State,
   UserDetails,
 } from "@/types";
@@ -21,6 +22,10 @@ export default {
 
   setCurrentUserDetails: (state: State, payload: UserDetails) => {
     state.currentUserDetails = payload;
+  },
+
+  setNotifications: (state: State, payload: Notifications) => {
+    state.notifications.push(payload);
   },
 
   SetShortlistEmployees: (state: State, payload: EmployeesInfoTypes) => {

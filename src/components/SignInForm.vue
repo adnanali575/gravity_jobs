@@ -2,7 +2,7 @@
   <div class="form-container">
     <v-sheet flat class="login-form">
       <div class="d-flex flex-column align-center justify-center">
-        <img class="logo my-6" src="@/assets/icons/logo.svg" alt="" />
+        <img class="logo my-6" src="../assets/icons/logo.svg" alt="" />
         <v-sheet class="form-control">
           <slot name="form"></slot>
         </v-sheet>
@@ -15,10 +15,10 @@
 
     <div class="img-section">
       <div class="inner-box d-flex">
-        <img class="mobile-banner" src="@/assets/images/mobile_banner.png" />
+        <img class="mobile-banner" src="../assets/images/mobile_banner.png" />
         <img
           class="desktop-banner"
-          src="@/assets/images/desktop_banner.png"
+          src="../assets/images/desktop_banner.png"
           alt=""
         />
       </div>
@@ -29,7 +29,7 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .form-container {
   height: 100vh;
   display: grid;
@@ -53,7 +53,7 @@
 }
 
 .img-section {
-  background: url("@/assets/images/stars.png") center center fixed;
+  background: url("../assets/images/stars.png") center center fixed;
   background-color: #140d33;
   display: flex;
   justify-content: center;

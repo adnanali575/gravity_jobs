@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import EmployeeCard from "./EmployeeCard.vue";
-import store from "@/store/store";
+import store from "../store/store";
 import PreLoader from "./PreLoader.vue";
 import { computed } from "@vue/reactivity";
 

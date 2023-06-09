@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import store from "@/store/store";
+import store from "../store/store";
 import BaseButton from "./BaseButton.vue";
 
 const props = defineProps<{

@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <v-app-bar flat class="bg-white d-flex justify-center px-5">
-      <h1>{{ headerTitle }}</h1>
+      <h1 class="heading">{{ headerTitle }}</h1>
 
       <v-spacer></v-spacer>
 
@@ -19,7 +19,7 @@ const props = defineProps<{
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import '../scss/variables';
 .v-app-bar {
   display: grid;
   height: 104px;
@@ -29,6 +29,10 @@ const props = defineProps<{
 @media (max-width: 900px){
   .v-app-bar {
     height: 67px;
+}
+
+.heading{
+  font-size: 25px;
 }
 }
 </style>

@@ -2,6 +2,7 @@ import type {
   ChatUser,
   EmployeesInfoTypes,
   Messages,
+  Notifications,
   UserDetails,
 } from "@/types";
 
@@ -16,13 +17,14 @@ const state = {
   employeeInfo: {} as EmployeesInfoTypes,
   currentUserDetails: {} as UserDetails,
   chatUsers: [] as Array<ChatUser>,
+  notifications: [] as Array<Notifications>,
   chatUser: {} as ChatUser,
   employeeToTerminate: {} as EmployeesInfoTypes,
   bodyPreLoader: false,
   searchLoader: false,
-  chats: false,
+  searchBarLoader: false,
+  chats: true,
   success: false,
-  error: false,
   shortListLoader: false,
   contactLoader: false,
   interviewLoader: false,
@@ -36,6 +38,8 @@ const state = {
   profileLoader: false,
   accountUpdateLoader: false,
   formSubmitted: false,
+  error: false,
+  errorMessage: 'Some went wrong! Please try again',
 };
 
 export default state;

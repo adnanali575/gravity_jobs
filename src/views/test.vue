@@ -36,7 +36,7 @@
 
 <script>
 import { ref, watch, computed, reactive } from "vue";
-import BaseInput from "@/components/BaseInput.vue";
+import BaseInput from "../components/BaseInput.vue";
 export default {
   components: {
     BaseInput,

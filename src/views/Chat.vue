@@ -26,7 +26,7 @@
         <v-divider class="divider"></v-divider>
       </div>
       <div class="greeting">
-        <img src="@/assets/images/chatting.jpg" alt="" />
+        <img src="../assets/images/chatting.jpg" alt="" />
         <p>Select user for Conversations</p>
       </div>
     </div>

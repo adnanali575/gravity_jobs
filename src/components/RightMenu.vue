@@ -23,7 +23,7 @@
 import notification from "./Notification.vue";
 import AccountControl from "./AccountControl.vue";
 import { computed } from "vue";
-import store from "@/store/store";
+import store from "../store/store";
 
 const currentUserName = computed(()=>{
   return `${store.state.currentUserDetails.firstName} ${store.state.currentUserDetails.lastName}`

@@ -30,7 +30,7 @@ import EmployeeCard from "./EmployeeCard.vue";
 import ConfirmationAlert from "./ConfirmationAlert.vue";
 import BaseButton from "./BaseButton.vue";
 import PreLoader from "./PreLoader.vue";
-import store from "@/store/store";
+import store from "../store/store";
 import { computed } from "@vue/reactivity";
 
 let hiredEmployees = computed(() => {

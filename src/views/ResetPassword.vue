@@ -28,16 +28,16 @@
 </template>
 
 <script setup lang="ts">
-import SignInForm from "@/components/SignInForm.vue";
-import BaseInput from "@/components/BaseInput.vue";
-import BaseButton from "@/components/BaseButton.vue";
+import SignInForm from "../components/SignInForm.vue";
+import BaseInput from "../components/BaseInput.vue";
+import BaseButton from "../components/BaseButton.vue";
 
 let password: string = "";
 let confirmPassword: string = "";
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .instructions {
   width: 332px;
   font-style: normal;
