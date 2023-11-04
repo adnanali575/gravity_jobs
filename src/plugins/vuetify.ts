@@ -27,7 +27,7 @@ const myCustomLightTheme = {
     Junior: '#D0EBFC',
     Senior: '#DEFAEA',
     CTO: '#E8CEF1',
-    // Lead: '#bdc1e8 ',
+    Lead: '#bdc1e8',
   }
 }
 

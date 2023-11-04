@@ -13,7 +13,7 @@
       </div>
 
       <div class="header-logo">
-        <img src="@/assets/icons/logo.svg" alt="" />
+        <img src="../assets/icons/logo.svg" alt="" />
       </div>
 
       <v-spacer></v-spacer>
@@ -22,7 +22,7 @@
       <span class="search-btn-icon">
         <PostBtn color="black" variant="text" class="post-btn mx-2" />
         <v-btn color="primary" class="search-toggle-btn" icon="" @click="searchBarToggle">
-          <img src="@/assets/icons/search_black.svg" alt="" />
+          <img src="../assets/icons/search_black.svg" alt="" />
         </v-btn>
       </span>
     </v-app-bar>
@@ -34,7 +34,7 @@ import RightMenu from "./RightMenu.vue";
 import SearchBar from "./SearchBar.vue";
 import PostBtn from "./PostBtn.vue";
 import { computed, ref, watch } from "vue";
-import store from "@/store/store";
+import store from "../store/store";
 
 let searchBarTranslation = ref(false);
 
@@ -51,7 +51,7 @@ const searchBarToggle = () => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 .v-app-bar {
   height: 104px;
   box-shadow: $shadow;

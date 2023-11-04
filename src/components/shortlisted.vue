@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import EmployeeCard from "./EmployeeCard.vue";
 import PreLoader from "./PreLoader.vue";
-import store from "@/store/store";
+import store from "../store/store";
 import { computed} from "@vue/reactivity";
 
 const shortlistedEmployees = computed(() => {

@@ -41,9 +41,9 @@
 </template>
 
 <script setup lang="ts">
-import store from "@/store/store";
+import store from "../store/store";
 import BaseButton from "./BaseButton.vue";
-import type { EmployeesInfoTypes } from "@/types";
+import type { EmployeesInfoTypes } from "../types";
 import { computed } from "vue";
 
 const props = defineProps<{

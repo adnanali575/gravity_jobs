@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import store from '@/store/store';
+import store from '../store/store';
 
 let SignOut = () => {
   store.dispatch('signOut')

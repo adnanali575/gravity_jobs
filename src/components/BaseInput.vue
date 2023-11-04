@@ -41,7 +41,7 @@ watch(
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/variables";
+@import "../scss/variables";
 
 .base-input-box {
   width: 100%;

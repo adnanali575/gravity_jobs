@@ -10,15 +10,15 @@
           </router-link>
 
           <v-btn class="navigation-btn" variant="text" router to="/search">
-            <img src="@/assets/icons/search_white.svg" />
+            <img src="../assets/icons/search_white.svg" />
             Search
           </v-btn>
           <v-btn class="navigation-btn" variant="text" router to="/shortlist">
-            <img src="@/assets/icons/star_outlined.svg" />
+            <img src="../assets/icons/star_outlined.svg" />
             Shortlist
           </v-btn>
           <v-btn class="navigation-btn" variant="text" router to="/chat">
-            <img src="@/assets/icons/messenger_1.svg" />
+            <img src="../assets/icons/messenger_1.svg" />
             Chat
           </v-btn>
           <v-btn class="navigation-btn" variant="text" router to="/post-job">

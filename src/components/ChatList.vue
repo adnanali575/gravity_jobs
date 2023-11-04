@@ -3,7 +3,7 @@
     <div class="search-bar-menu bg-white">
       <div class="search-field d-flex align-center justify-space-between">
         <v-btn icon="" class="search-btn bg-input-background" flat>
-          <img src="@/assets/icons/search.svg" alt="" />
+          <img src="../assets/icons/search.svg" alt="" />
         </v-btn>
         <validationFreeInput
           class="ps-11"
@@ -74,8 +74,10 @@
 <script setup lang="ts">
 import validationFreeInput from "./validationFreeInput.vue";
 import PreLoader from "./PreLoader.vue";
-import store from "@/store/store";
-import type { ChatUser } from "@/types";
+
+import { hours, minutes, period } from "../functions";
+import store from "../store/store";
+import type { ChatUser } from "../types";
 import { computed, ref } from "vue";
 
 let searchText = ref("");
@@ -125,23 +127,6 @@ const chatListLoader = computed(() => {
   return store.state.chatListLoader;
 });
 
-const hours = (hours: number) => {
-  let h: number = hours;
-  if (h > 12) h = hours - 12;
-  if (h < 10) return "0" + h.toString();
-  else return h;
-};
-
-const minutes = (minutes: number) => {
-  if (minutes < 10) return "0" + minutes?.toString();
-  else return minutes?.toString();
-};
-
-const period = (hours: number) => {
-  if (hours > 12) return "PM";
-  else return "AM";
-};
-
 const lastMessage = (message: string) => {
   if (message) {
     if (message.length > 20) return message.slice(0, 26) + "......";
@@ -151,7 +136,7 @@ const lastMessage = (message: string) => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_variables";
+@import "../scss/_variables";
 
 .chat-list-pre-loader {
   width: 200px;
@@ -231,7 +216,7 @@ const lastMessage = (message: string) => {
 }
 
 .profile-avatar img {
-  height: 100%;
+  width: 100%;
 }
 
 .inner-content {

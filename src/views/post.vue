@@ -1,28 +1,7 @@
 <template>
-  <!-- <Success greetings="Post submitted successfully" /> -->
   <div class="post">
+    <ErrorMessage></ErrorMessage>
     <v-sheet class="form-container">
-      <div class="custom-input-box">
-        <input
-          id="input"
-          type="file"
-          ref="fileInput"
-          @change="onChangeImageFile"
-        />
-        <v-tooltip text="Please select an image of same length and width">
-          <template v-slot:activator="{ props }">
-            <label v-bind="props" for="input">
-              <img v-if="!imgExists" :src="dummyProfile" alt="" />
-              <img v-if="imgExists" :src="profileValue" alt="" />
-            </label>
-          </template>
-        </v-tooltip>
-        <v-icon class="camera-icon" v-if="!imgExists">mdi-image-area</v-icon>
-        <v-icon class="delete-icon" v-if="imgExists" @click="clearImage"
-          >mdi-delete</v-icon
-        >
-      </div>
-      <p v-if="imageUrlValue" class="field-empty ms-3">Please select an image</p>
       <h1 class="heading">Enter Your Details and Post a Job</h1>
       <v-form class="form">
         <!-- -------------------------------------------------------------------------------------------- -->
@@ -136,36 +115,26 @@
 </template>
 
 <script setup lang="ts">
-import BaseInput from "@/components/BaseInput.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import SelectDropDown from "@/components/SelectDropDown.vue";
-import { computed, ref as vueRef } from "vue";
-import store from "@/store/store";
-import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { watch } from "vue";
-
-const storage = getStorage();
-
-let dummyProfile =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBj0GqngJ9vVsSB7zAkP4hS_FCeiusWCemhg&usqp=CAU";
+import BaseInput from "../components/BaseInput.vue";
+import BaseButton from "../components/BaseButton.vue";
+import SelectDropDown from "../components/SelectDropDown.vue";
+import ErrorMessage from "../components/ErrorMessage.vue";
+import { ref as vueRef, type Ref, watch } from "vue";
+import store from "../store/store";
 
 const stacksList = ["Vue js", "React", "Angular", "jQuery"];
 let locationsList = ["Full-Remote", "Pakistan", "Iran", "United States"];
 let seniorityList = ["Junior", "Senior", "Lead", "CTO"];
 
-let imageUlr = vueRef("");
 let location = vueRef("");
-let stacks = vueRef<string[]>();
-let seniority = vueRef<string[]>();
+let stacks: Ref<string[] | undefined> = vueRef<string[]>();
+let seniority: Ref<string[] | undefined> = vueRef<string[]>();
 let expertInSkill = vueRef("");
 let skillStartingYear = vueRef("");
 let experienceInSkillFrom = vueRef("");
 let institution = vueRef("");
 let passingYear = vueRef("");
 let educatedFrom = vueRef("");
-
-let imageFile = vueRef<File | null>();
-let snackBar = vueRef(true)
 
 let expertValue = vueRef(false);
 let skillStartValue = vueRef(false);
@@ -176,7 +145,6 @@ let educatedValue = vueRef(false);
 let locationValue = vueRef(false);
 let stacksValue = vueRef(false);
 let seniorityValue = vueRef(false);
-let imageUrlValue = vueRef(false);
 
 const validation = () => {
   if (expertInSkill.value) expertValue.value = false;
@@ -191,12 +159,13 @@ watch(location, (val) => {
 });
 
 watch(stacks, (val) => {
-  if (val.length > 0) stacksValue.value = false;
+  if (stacks.value && stacks.value.length > 0) stacksValue.value = false;
   else stacksValue.value = true;
 });
 
 watch(seniority, (val) => {
-  if (seniority.value.length > 0) seniorityValue.value = false;
+  if (seniority.value && seniority.value.length > 0)
+    seniorityValue.value = false;
   else seniorityValue.value = true;
 });
 
@@ -210,40 +179,6 @@ watch(passingYear, (val) => {
   else passingYearValue.value = true;
 });
 
-
-const imgExists = computed(() => {
-  if (imageFile.value) return true;
-  else return false;
-});
-
-let profileValue = computed(() => {
-  if (imageFile.value) {
-    return URL.createObjectURL(imageFile.value);
-  } else {
-    return "";
-  }
-});
-
-const clearImage = () => {
-  imageFile.value = null;
-};
-let file = vueRef<File | null>();
-const onChangeImageFile = (event: Event) => {
-  file.value = (event.target as HTMLInputElement).files?.[0] || null;
-  imageFile.value = file.value;
-
-  if (!file.value) return;
-
-  const imageRef = ref(storage, "profile-images/" + imageFile.value?.name);
-  uploadBytes(imageRef, file.value).then((snapshot) => {
-    getDownloadURL(imageRef).then((downloadURL) => {
-      imageUlr.value = downloadURL;
-      console.log(downloadURL);
-      imageUrlValue.value = false
-    });
-  });
-};
-
 const submitApplication = () => {
   const date = new Date();
 
@@ -255,7 +190,6 @@ const submitApplication = () => {
   let passingDate = new Date(passingYear.value);
 
   if (
-    !imageUlr.value ||
     !locationString ||
     seniorityArray.length <= 0 ||
     stacksArray.length <= 0 ||
@@ -267,7 +201,6 @@ const submitApplication = () => {
     !educatedFrom.value
   ) {
     console.log("posting fail");
-    if (!imageUlr.value) imageUrlValue.value = true;
     if (!expertInSkill.value) expertValue.value = true;
     if (!skillStartingYear.value) skillStartValue.value = true;
     if (!experienceInSkillFrom.value) skillfromValue.value = true;
@@ -285,9 +218,9 @@ const submitApplication = () => {
       location: locationString,
       stacks: stacksArray,
       seniority: seniorityArray,
-      imageUrl: imageUlr.value,
       expertInSkill: expertInSkill.value,
       skillStartingYear: skilledDate,
+      imageUrl: store.state.currentUserDetails.imageUrl,
       experienceInSkillFrom: experienceInSkillFrom.value,
       institution: institution.value,
       passingYear: passingDate,
@@ -301,74 +234,11 @@ const submitApplication = () => {
 
 <style scoped lang="scss">
 @import "../scss/variables";
+
 .post {
   margin: 110px auto 0px auto;
   padding: 20px;
   max-width: 1400px;
-
-  .custom-input-box {
-    margin: 0px 10px;
-    // padding-top: 1px;
-    height: 100px;
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    input {
-      display: none;
-    }
-
-    label {
-      border-radius: 50%;
-      border: 1px solid black;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    img {
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .field-empty {
-      color: #db0000;
-      animation: error 0.3s linear;
-      font-size: 13px;
-      line-height: 15px;
-    }
-
-    .camera-icon {
-      color: #2b2b2b;
-    }
-
-    .delete-icon {
-      background: #00000042;
-      color: #d10e0e;
-    }
-
-    .v-icon {
-      margin-top: -31px;
-      margin-right: 2px;
-      border-radius: 50%;
-      padding: 14px;
-      cursor: pointer;
-      transition: all 0.1s ease-in-out;
-    }
-
-    .delete-icon:hover {
-      background: #0000006d;
-    }
-
-    .delete-icon:active {
-      background: #00000042;
-    }
-  }
 
   // --------------------------------------------------
   .dropdown-field-box,
@@ -419,6 +289,12 @@ const submitApplication = () => {
   }
 }
 
+@media (max-width: 1280px) {
+  .post {
+    padding-bottom: 80px;
+  }
+}
+
 @media (max-width: 1100px) {
   .post {
     padding-bottom: 70px;
@@ -426,6 +302,7 @@ const submitApplication = () => {
     .heading {
       font-size: 20px !important;
     }
+
     .form-container {
       padding: 32px 40px 0px 40px !important;
       width: 95% !important;
@@ -442,6 +319,7 @@ const submitApplication = () => {
     .custom-input-box {
       margin: 0px;
     }
+
     .form-container {
       padding: 30px 20px;
     }
@@ -465,9 +343,10 @@ const submitApplication = () => {
 
 @media (max-width: 500px) {
   .post {
-    padding: 0px;
-    padding-bottom: 45px;
+    margin-top: 80px;
+    padding: 0px 0px 60px 0px;
   }
+
   .controls {
     flex-direction: column-reverse;
     align-items: center;
